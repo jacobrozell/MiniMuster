@@ -1,0 +1,54 @@
+name: MusterRoll
+options:
+  bundleIdPrefix: com.musterroll
+  deploymentTarget:
+    iOS: "18.0"
+  developmentLanguage: en
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    GENERATE_INFOPLIST_FILE: YES
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    SWIFT_EMIT_LOC_STRINGS: YES
+
+targets:
+  MusterRoll:
+    type: application
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - path: MusterRoll
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.musterroll.app
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        TARGETED_DEVICE_FAMILY: "1,2"
+
+  MusterRollTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - path: MusterRollTests
+    dependencies:
+      - target: MusterRoll
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.musterroll.app.tests
+
+schemes:
+  MusterRoll:
+    build:
+      targets:
+        MusterRoll: all
+        MusterRollTests: [test]
+    test:
+      targets:
+        - MusterRollTests
