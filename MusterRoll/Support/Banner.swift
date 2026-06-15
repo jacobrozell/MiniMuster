@@ -1,4 +1,7 @@
 import SwiftUI
+#if canImport(UIKit)
+import UIKit
+#endif
 
 /// Brief inline banner below the navigation bar (replaces toast overlay).
 @Observable
@@ -23,20 +26,27 @@ private struct BannerModifier: ViewModifier {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     func body(content: Content) -> some View {
-        content.safeAreaInset(edge: .top, spacing: 0) {
-            if let message = banner.message {
-                Text(message)
-                    .font(.subheadline)
-                    .frame(maxWidth: .infinity)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 10)
-                    .background(.regularMaterial)
-                    .overlay(alignment: .bottom) { Divider() }
-                    .transition(reduceMotion ? .opacity : .move(edge: .top).combined(with: .opacity))
-                    .accessibilityAddTraits(.updatesFrequently)
+        content
+            .safeAreaInset(edge: .top, spacing: 0) {
+                if let message = banner.message {
+                    Text(message)
+                        .font(.subheadline)
+                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .background(.regularMaterial)
+                        .overlay(alignment: .bottom) { Divider() }
+                        .transition(reduceMotion ? .opacity : .move(edge: .top).combined(with: .opacity))
+                        .accessibilityLabel(message)
+                }
             }
-        }
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: banner.message)
+            .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: banner.message)
+            .onChange(of: banner.message) { _, new in
+                guard let new else { return }
+#if canImport(UIKit)
+                UIAccessibility.post(notification: .announcement, argument: new)
+#endif
+            }
     }
 }
 

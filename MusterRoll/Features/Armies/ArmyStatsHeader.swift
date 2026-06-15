@@ -23,11 +23,22 @@ struct ArmyStatsHeader: View {
 
     private func label(_ base: String) -> String { scoped ? "\(base) (filtered)" : base }
 
+    private var basedStage: PipelineStage? {
+        pipeline.first { $0.key == "Based" }
+            ?? (pipeline.count >= 2 ? pipeline[pipeline.count - 2] : nil)
+    }
+
+    private var doneStage: PipelineStage? {
+        pipeline.first { $0.key == "Done" } ?? pipeline.last
+    }
+
     var body: some View {
         let u = units
         let models = u.reduce(0) { $0 + $1.modelCount }
-        let based = u.filter { $0.state == "Based" }.count
-        let done = u.filter { $0.state == "Done" }.count
+        let basedKey = basedStage?.key
+        let doneKey = doneStage?.key
+        let based = basedKey.map { key in u.filter { $0.state == key }.count } ?? 0
+        let done = doneKey.map { key in u.filter { $0.state == key }.count } ?? 0
         let first = pipeline.first?.key
         let wip = u.filter { !Pipeline.doneStates.contains($0.state) && $0.state != first }.count
         let todo = u.filter { $0.state == first }.count
@@ -37,8 +48,8 @@ struct ArmyStatsHeader: View {
             LazyVGrid(columns: statColumns, spacing: 8) {
                 StatTile(value: u.count, label: label("Unit Entries"))
                 StatTile(value: models, label: label("Models (est.)"), accent: true)
-                StatTile(value: based, label: label("Based"))
-                StatTile(value: done, label: label("Done"))
+                StatTile(value: based, label: label(basedStage?.key ?? "Based"))
+                StatTile(value: done, label: label(doneStage?.key ?? "Done"))
                 StatTile(value: wip, label: "In Progress")
                 StatTile(value: todo, label: "On the Sprue")
                 StatTile(value: armyCount, label: label("Armies"))

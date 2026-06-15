@@ -13,6 +13,7 @@ struct RootView: View {
     @State private var showBackupReminder = false
     @State private var showOnboarding = false
     @State private var showSettings = false
+    @AppStorage("backupReminderSnoozedUntil") private var backupReminderSnoozedUntil = 0.0
 
     private var theme: ThemePreference { configs.first?.theme ?? .system }
     private var unitCount: Int { armies.reduce(0) { $0 + $1.units.count } }
@@ -70,6 +71,10 @@ struct RootView: View {
         }
         .sheet(isPresented: $showSettings) { SettingsScreen() }
         .alert("Backup reminder", isPresented: $showBackupReminder) {
+            Button("Open Settings") { showSettings = true }
+            Button("Remind Me Later") {
+                backupReminderSnoozedUntil = Date().addingTimeInterval(7 * 86400).timeIntervalSince1970
+            }
             Button("OK", role: .cancel) {}
         } message: {
             Text("It's been 14+ days since your last full backup. Export one from Settings → Data.")
@@ -116,6 +121,7 @@ struct RootView: View {
         checkedBackup = true
         guard !AppInfo.isUITesting else { return }
         guard !armies.isEmpty || !paints.isEmpty else { return }
+        guard Date().timeIntervalSince1970 >= backupReminderSnoozedUntil else { return }
         guard let lastBackup = configs.first?.lastBackupAt else { return }
         let days = Date().timeIntervalSince(lastBackup) / 86400
         if days >= 14 { showBackupReminder = true }

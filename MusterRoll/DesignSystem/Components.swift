@@ -56,11 +56,13 @@ struct StatTile: View {
     let label: String
     var accent: Bool = false
 
+    @Environment(\.palette) private var palette
+
     var body: some View {
         VStack(spacing: 4) {
             Text("\(value)")
                 .font(.system(.title2, design: .serif).weight(.semibold))
-                .foregroundStyle(accent ? Color(hex: "#c9a44c") : .primary)
+                .foregroundStyle(accent ? Color(hex: palette.gold) : .primary)
                 .minimumScaleFactor(0.8)
                 .lineLimit(1)
             Text(label)
