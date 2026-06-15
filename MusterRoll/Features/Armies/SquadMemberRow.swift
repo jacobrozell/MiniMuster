@@ -36,6 +36,8 @@ struct SquadMemberRow: View {
                 .font(.caption2)
                 .onChange(of: notes) { SquadStore.setMemberNotes(unit, index: member.index, notes: notes, in: ctx) }
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Model \(member.index + 1) of \(unit.modelCount), state \(effectiveState)")
         .onAppear { notes = member.notes ?? "" }
     }
 }

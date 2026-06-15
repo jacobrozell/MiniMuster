@@ -61,3 +61,49 @@ struct NormalizeTests {
         #expect(Normalize.bool("maybe").warning != nil)
     }
 }
+
+@Suite("CSV schema")
+struct CSVSchemaTests {
+    @Test("detects armies vs paints from headers")
+    func detect() {
+        #expect(CSVSchema.detect([["Game", "Army", "Unit"]]) == .armies)
+        #expect(CSVSchema.detect([["Name", "Type"]]) == .paints)
+        #expect(CSVSchema.detect([["Foo", "Bar"]]) == nil)
+    }
+
+    @Test("templates and filenames match web conventions")
+    func templates() {
+        #expect(CSVSchema.template(.armies).contains("Game,Faction,Army"))
+        #expect(CSVSchema.template(.paints).contains("Name,Type"))
+        #expect(CSVSchema.filename(.armies) == "warhammer_armies.csv")
+        #expect(CSVSchema.filename(.paints) == "warhammer_paint_inventory.csv")
+    }
+}
+
+@Suite("HeaderMap")
+struct HeaderMapTests {
+    @Test("empty file fails with a clear error")
+    func empty() {
+        let hm = HeaderMap(rows: [], required: CSVSchema.armyRequired)
+        #expect(!hm.ok)
+        #expect(hm.error == "File is empty")
+    }
+
+    @Test("value lookup is case-insensitive on headers")
+    func lookup() {
+        let hm = HeaderMap(rows: [["Game", "Faction", "Army", "Unit", "Qty"]], required: CSVSchema.armyRequired)
+        #expect(hm.ok)
+        #expect(hm.value(["40k", "Orks", "W", "Boyz", "2"], "army") == "W")
+        #expect(hm.value(["40k", "W", "Boyz"], "qty") == "")
+    }
+}
+
+@Suite("Import hints")
+struct ImportHintTests {
+    @Test("rejects Excel extensions with guidance")
+    func excel() {
+        #expect(fileImportHint("roster.xlsx")?.contains("Excel") == true)
+        #expect(fileImportHint("roster.xls")?.contains("CSV") == true)
+        #expect(fileImportHint("roster.csv") == nil)
+    }
+}

@@ -83,6 +83,53 @@ struct ArmyImportTests {
         #expect(!r.ok)
         #expect(r.errors.first?.contains("Missing required columns") == true)
     }
+
+    @Test("warns when later rows disagree on game or faction")
+    func mismatchedGameFaction() {
+        let csv = """
+        Game,Faction,Army,Unit
+        40k,Orks,WAAAGH,Boyz (10)
+        AoS,Orks,WAAAGH,Grot
+        40k,Greenskins,WAAAGH,Nob
+        """
+        let r = ArmyCSV.import(CSV.parse(csv), pipeline: pipeline, overrides: [])
+        #expect(r.ok)
+        #expect(r.warnings.contains { $0.contains("Game") && $0.contains("differs") })
+        #expect(r.warnings.contains { $0.contains("Faction") && $0.contains("differs") })
+    }
+
+    @Test("skips invalid member numbers with a warning")
+    func invalidMember() {
+        let csv = "Game,Faction,Army,Unit,Member\n40k,Orks,W,Boyz (5),abc\n"
+        let r = ArmyCSV.import(CSV.parse(csv), pipeline: pipeline, overrides: [])
+        #expect(r.warnings.contains { $0.contains("invalid Member") })
+        #expect(r.armies?.first?.units.count == 1)
+        #expect(r.armies?.first?.units.first?.members.isEmpty == true)
+    }
+
+    @Test("errors when file has headers but no unit rows")
+    func noUnits() {
+        let r = ArmyCSV.import(CSV.parse("Game,Faction,Army,Unit\n"), pipeline: pipeline, overrides: [])
+        #expect(!r.ok)
+        #expect(r.errors.contains("No unit rows found"))
+    }
+
+    @Test("parses spearhead bool variants")
+    func spearheadVariants() {
+        let csv = """
+        Game,Faction,Army,Unit,Spearhead
+        40k,Orks,W,A,y
+        40k,Orks,W,B,n
+        40k,Orks,W,C,0
+        40k,Orks,W,D,maybe
+        """
+        let r = ArmyCSV.import(CSV.parse(csv), pipeline: pipeline, overrides: [])
+        let units = r.armies?.first?.units ?? []
+        #expect(units[0].spearhead == true)
+        #expect(units[1].spearhead == false)
+        #expect(units[2].spearhead == false)
+        #expect(r.warnings.contains { $0.contains("Unrecognised boolean") })
+    }
 }
 
 @Suite("Paint CSV import")
@@ -110,5 +157,12 @@ struct PaintImportTests {
         let r = PaintCSV.import(CSV.parse(csv))
         #expect(r.paints?.count == 1)
         #expect(r.paints?.first?.swatchHex == PaintType.swatchHex(for: "Base"))
+    }
+
+    @Test("errors when no paint rows remain after parsing")
+    func empty() {
+        let r = PaintCSV.import(CSV.parse("Name,Type\n"))
+        #expect(!r.ok)
+        #expect(r.errors.contains("No paint rows found"))
     }
 }

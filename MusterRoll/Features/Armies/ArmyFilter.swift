@@ -107,4 +107,17 @@ enum ArmyFilter {
         cfg.sourceFilter = "All"; cfg.tagFilter = "All"; cfg.spearheadOnly = false
         cfg.quickViewRaw = "all"
     }
+
+    /// Count of non-default filter prefs (excludes search text).
+    static func activeFilterCount(_ cfg: AppConfiguration) -> Int {
+        var n = 0
+        if cfg.gameFilter != "All" { n += 1 }
+        if cfg.factionFilter != "All" { n += 1 }
+        if cfg.stateFilter != "All" { n += 1 }
+        if cfg.sourceFilter != "All" { n += 1 }
+        if cfg.tagFilter != "All" { n += 1 }
+        if cfg.spearheadOnly { n += 1 }
+        if cfg.quickViewRaw != "all" { n += 1 }
+        return n
+    }
 }

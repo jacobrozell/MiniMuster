@@ -1,13 +1,11 @@
 import SwiftUI
 import SwiftData
 
-/// Settings sheet: theme, global pipeline editor, faction overrides, data, about.
-/// Mirrors the web masthead settings (`js/ui/theme.js`, `settings-panel.js`).
 @MainActor
 struct SettingsScreen: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
-    @Environment(ToastCenter.self) private var toast
+    @Environment(BannerCenter.self) private var banner
     @Query private var configs: [AppConfiguration]
     @Query private var armies: [Army]
 
@@ -27,19 +25,20 @@ struct SettingsScreen: View {
 
                 Section("Painting") {
                     NavigationLink("Pipeline stages") { PipelineEditor(cfg: cfg) }
-                    NavigationLink("Faction crests & colours") { FactionOverridesEditor(cfg: cfg, armies: armies) }
-                }
-
-                Section("Data") {
-                    Button("Clear all data", role: .destructive) {
-                        CollectionStore.clearAll(in: context)
-                        toast.show("All data cleared")
-                        dismiss()
+                    NavigationLink("Faction crests & colours") {
+                        FactionOverridesEditor(cfg: cfg, armies: armies)
                     }
                 }
 
+                SettingsDataSection()
+
                 Section("About") {
-                    LabeledContent("App", value: "The Muster Roll")
+                    LabeledContent("App", value: AppInfo.displayName)
+                    LabeledContent("Version") {
+                        Text(Bundle.main.appVersion)
+                            .foregroundStyle(.secondary)
+                    }
+                    NavigationLink("Privacy Policy") { PrivacyPolicyView() }
                     Text("For the Emperor · For the Great Horned Rat · Sigmar Watches")
                         .font(.caption).foregroundStyle(.secondary)
                 }
@@ -50,7 +49,7 @@ struct SettingsScreen: View {
     }
 }
 
-/// Global pipeline editor. Mirrors `openPipelineSettings` (`settings-panel.js`).
+/// Global pipeline editor.
 private struct PipelineEditor: View {
     @Environment(\.modelContext) private var context
     @Bindable var cfg: AppConfiguration
@@ -69,7 +68,6 @@ private struct PipelineEditor: View {
             }
             .onDelete { stages.remove(atOffsets: $0) }
             .onMove { stages.move(fromOffsets: $0, toOffset: $1) }
-
             Button("Add stage", systemImage: "plus") {
                 stages.append(PipelineStage(key: "New", hex: "#888888"))
             }
@@ -88,8 +86,6 @@ private struct PipelineEditor: View {
     }
 }
 
-/// Faction crest/colour overrides for factions present in the collection.
-/// Mirrors `openFactionSettings`.
 private struct FactionOverridesEditor: View {
     @Environment(\.modelContext) private var context
     @Bindable var cfg: AppConfiguration

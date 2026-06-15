@@ -1,6 +1,6 @@
 name: MusterRoll
 options:
-  bundleIdPrefix: com.musterroll
+  bundleIdPrefix: com.jacobrozell
   deploymentTarget:
     iOS: "18.0"
   developmentLanguage: en
@@ -10,7 +10,7 @@ settings:
   base:
     SWIFT_VERSION: "6.0"
     SWIFT_STRICT_CONCURRENCY: complete
-    MARKETING_VERSION: "0.1.0"
+    MARKETING_VERSION: "1.0.0"
     CURRENT_PROJECT_VERSION: "1"
     GENERATE_INFOPLIST_FILE: YES
     ENABLE_USER_SCRIPT_SANDBOXING: YES
@@ -23,12 +23,50 @@ targets:
     deploymentTarget: "18.0"
     sources:
       - path: MusterRoll
+    entitlements:
+      path: MusterRoll/MusterRoll.entitlements
+    info:
+      path: MusterRoll/Info.plist
+      properties:
+        UILaunchScreen:
+          UIImageName: CrestLogo
+          UIColorName: LaunchBackground
+          UIImageRespectsSafeAreaInsets: true
+    dependencies:
+      - target: MusterRollWidget
+        embed: true
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.musterroll.app
-        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.minimuster
+        INFOPLIST_KEY_CFBundleDisplayName: MiniMuster
         INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        TARGETED_DEVICE_FAMILY: "1,2"
+
+  MusterRollWidget:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - path: MusterRollWidget
+        excludes:
+          - Info.plist
+      - path: MusterRoll/Widget
+        includes:
+          - WidgetDataStore.swift
+    entitlements:
+      path: MusterRollWidget/MusterRollWidget.entitlements
+    info:
+      path: MusterRollWidget/Info.plist
+      properties:
+        CFBundleDisplayName: MiniMuster
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.minimuster.widget
+        SKIP_INSTALL: YES
         TARGETED_DEVICE_FAMILY: "1,2"
 
   MusterRollTests:
@@ -41,7 +79,20 @@ targets:
       - target: MusterRoll
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.musterroll.app.tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.minimuster.tests
+
+  MusterRollUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - path: MusterRollUITests
+    dependencies:
+      - target: MusterRoll
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.minimuster.uitests
+        TEST_TARGET_NAME: MusterRoll
 
 schemes:
   MusterRoll:
@@ -49,6 +100,13 @@ schemes:
       targets:
         MusterRoll: all
         MusterRollTests: [test]
+        MusterRollUITests: [test]
+        MusterRollWidget: all
     test:
+      gatherCoverageData: true
+      coverageTargets:
+        - MusterRoll
+        - MusterRollWidget
       targets:
         - MusterRollTests
+        - MusterRollUITests

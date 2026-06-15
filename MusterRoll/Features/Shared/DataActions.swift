@@ -70,6 +70,99 @@ enum DataActions {
         return "Imported \(n) \(unit)\(warn)."
     }
 
+    struct ImportOutcome: Identifiable, Sendable {
+        let id: UUID
+        let success: Bool
+        let title: String
+        let message: String
+        let warnings: [String]
+
+        static func failure(title: String, message: String) -> ImportOutcome {
+            ImportOutcome(id: UUID(), success: false, title: title, message: message, warnings: [])
+        }
+    }
+
+    static func importArmiesOutcome(from url: URL, mode: Mode, ctx: ModelContext) -> ImportOutcome {
+        do {
+            if let hint = fileImportHint(url.lastPathComponent) {
+                return .failure(title: "Import failed", message: hint)
+            }
+            let text = try readText(at: url)
+            let cfg = Config.current(ctx)
+            let result = ArmyCSV.import(CSV.parse(text),
+                                        pipeline: Pipeline.resolve(cfg.globalPipeline),
+                                        overrides: cfg.factionOverrides)
+            guard result.ok, let armies = result.armies else {
+                return .failure(title: "Import failed",
+                                message: result.errors.first ?? "Unknown error")
+            }
+            switch mode {
+            case .replace: CollectionStore.replaceArmies(armies, in: ctx)
+            case .append:  CollectionStore.appendArmies(armies, in: ctx)
+            }
+            WidgetUpdater.refresh(context: ctx)
+            return ImportOutcome(id: UUID(), success: true, title: "Armies imported",
+                                 message: summary(result, noun: "armies", warnings: result.warnings),
+                                 warnings: result.warnings)
+        } catch {
+            return .failure(title: "Import failed", message: error.localizedDescription)
+        }
+    }
+
+    static func restoreBackupOutcome(from url: URL, ctx: ModelContext) -> ImportOutcome {
+        do {
+            let text = try readText(at: url)
+            switch BackupSanitizer.parse(text, byteLength: text.utf8.count) {
+            case .failure(let err):
+                return .failure(title: "Restore failed", message: err.message)
+            case .success(let backup):
+                BackupCodec.restore(backup, into: ctx)
+                WidgetUpdater.refresh(context: ctx)
+                return ImportOutcome(id: UUID(), success: true, title: "Restore complete",
+                                     message: "Backup restored: \(backup.preview).", warnings: [])
+            }
+        } catch {
+            return .failure(title: "Restore failed", message: error.localizedDescription)
+        }
+    }
+
+    static func loadSampleOutcome(ctx: ModelContext) -> ImportOutcome {
+        do {
+            let counts = try DemoLoader.load(into: ctx)
+            WidgetUpdater.refresh(context: ctx)
+            return ImportOutcome(id: UUID(), success: true, title: "Sample loaded",
+                                 message: "Sample loaded: \(counts.armies) armies, \(counts.paints) paints.",
+                                 warnings: [])
+        } catch {
+            return .failure(title: "Sample failed",
+                            message: "Could not load sample data (resources missing).")
+        }
+    }
+
+    static func importPaintsOutcome(from url: URL, mode: Mode, ctx: ModelContext) -> ImportOutcome {
+        do {
+            if let hint = fileImportHint(url.lastPathComponent) {
+                return .failure(title: "Import failed", message: hint)
+            }
+            let text = try readText(at: url)
+            let result = PaintCSV.import(CSV.parse(text))
+            guard result.ok, let paints = result.paints else {
+                return .failure(title: "Import failed",
+                                message: result.errors.first ?? "Unknown error")
+            }
+            switch mode {
+            case .replace: CollectionStore.replacePaints(paints, in: ctx)
+            case .append:  CollectionStore.appendPaints(paints, in: ctx)
+            }
+            WidgetUpdater.refresh(context: ctx)
+            return ImportOutcome(id: UUID(), success: true, title: "Paints imported",
+                                 message: summary(result, noun: "paints", warnings: result.warnings),
+                                 warnings: result.warnings)
+        } catch {
+            return .failure(title: "Import failed", message: error.localizedDescription)
+        }
+    }
+
     // MARK: JSON backup
 
     static func restoreBackup(from url: URL, ctx: ModelContext) -> String {
@@ -111,6 +204,6 @@ enum DataActions {
         let json = BackupCodec.export(ctx)
         Config.current(ctx).lastBackupAt = Date()
         try? ctx.save()
-        return (json, "muster-roll-backup-\(Date().fileStamp).json")
+        return (json, "minimuster-backup-\(Date().fileStamp).json")
     }
 }

@@ -34,6 +34,30 @@ enum AppContainer {
         }
     }
 
+    /// On-disk temp container for UI tests that need persistence across relaunches.
+    @MainActor
+    static func uiTestPersistentContainer() -> ModelContainer {
+        let directory = FileManager.default.temporaryDirectory
+            .appending(path: "MusterRollUITest-Persistent", directoryHint: .isDirectory)
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let storeURL = directory.appending(path: "store.sqlite")
+        let config = ModelConfiguration(schema: schema, url: storeURL)
+        do {
+            let container = try ModelContainer(for: schema, configurations: config)
+            ensureConfiguration(container.mainContext)
+            return container
+        } catch {
+            fatalError("Failed to create UI test ModelContainer: \(error)")
+        }
+    }
+
+    /// Remove the on-disk UI test store (call from UI test setUp for a fresh install).
+    static func resetUITestPersistentStore() {
+        let directory = FileManager.default.temporaryDirectory
+            .appending(path: "MusterRollUITest-Persistent", directoryHint: .isDirectory)
+        try? FileManager.default.removeItem(at: directory)
+    }
+
     /// Guarantee exactly one AppConfiguration row exists.
     @MainActor
     static func ensureConfiguration(_ context: ModelContext) {

@@ -88,6 +88,7 @@ enum BackupCodec {
         cfg.armySortRaw = s.armySort
         cfg.unitSortRaw = s.unitSort
         cfg.lastBackupAt = s.lastBackupAt
+        cfg.hasSeenOnboarding = true
         ctx.insert(cfg)
         try? ctx.save()
     }

@@ -21,4 +21,10 @@ struct ModelCountTests {
         #expect(ModelCount.of(name: "Thing", qty: 0) == 1)
         #expect(ModelCount.of(name: "Thing (3)", qty: 0) == 3)
     }
+
+    @Test("unclosed parenthesis falls back to qty")
+    func unclosedParen() {
+        #expect(ModelCount.firstParenGroup("Squad (5") == nil)
+        #expect(ModelCount.of(name: "Squad (5", qty: 2) == 2)
+    }
 }

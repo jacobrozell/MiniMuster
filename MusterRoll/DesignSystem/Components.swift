@@ -7,6 +7,10 @@ struct ProgressMeter: View {
     let segments: [ProgressSegment]
     var height: CGFloat = 10
 
+    @ScaledMetric(relativeTo: .caption) private var scaledHeight: CGFloat = 10
+
+    private var barHeight: CGFloat { height == 10 ? scaledHeight : height }
+
     var body: some View {
         GeometryReader { geo in
             HStack(spacing: 0) {
@@ -21,7 +25,7 @@ struct ProgressMeter: View {
                 }
             }
         }
-        .frame(height: height)
+        .frame(height: barHeight)
         .clipShape(Capsule())
         .accessibilityHidden(true)
     }
@@ -53,19 +57,26 @@ struct StatTile: View {
     var accent: Bool = false
 
     var body: some View {
-        VStack(spacing: 2) {
+        VStack(spacing: 4) {
             Text("\(value)")
                 .font(.system(.title2, design: .serif).weight(.semibold))
                 .foregroundStyle(accent ? Color(hex: "#c9a44c") : .primary)
+                .minimumScaleFactor(0.8)
+                .lineLimit(1)
             Text(label)
                 .font(.caption2)
-                .textCase(.uppercase)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
+                .lineLimit(3)
+                .minimumScaleFactor(0.85)
+                .fixedSize(horizontal: false, vertical: true)
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, minHeight: 72)
+        .padding(.horizontal, 6)
         .padding(.vertical, 10)
         .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 10))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(label), \(value)")
     }
 }
 

@@ -19,6 +19,8 @@ enum CSV {
     static func parse(_ rawText: String) -> [[String]] {
         var text = rawText
         if text.hasPrefix("\u{FEFF}") { text.removeFirst() }
+        text = text.replacingOccurrences(of: "\r\n", with: "\n")
+            .replacingOccurrences(of: "\r", with: "\n")
 
         // Normalize non-comma delimiters by re-quoting, matching the JS preprocessing.
         let delim = detectDelimiter(text)

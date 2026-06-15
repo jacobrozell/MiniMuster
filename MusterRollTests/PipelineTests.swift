@@ -63,4 +63,49 @@ struct PipelineTests {
         #expect(u.state == "Base Coated")
         #expect(Pipeline.canAdvance(u, p))
     }
+
+    @Test("empty unit list yields zero progress")
+    func emptyProgress() {
+        #expect(Pipeline.progress(of: [], p) == 0)
+        #expect(Pipeline.segments(of: [], p).isEmpty)
+    }
+
+    @Test("squad-weighted progress averages per-model states")
+    func squadProgress() {
+        let u = Unit(name: "Squad (4)", qty: 1, state: "Primed")
+        for i in 0..<4 {
+            let m = SquadMember(index: i)
+            m.unit = u
+            if i < 2 { m.state = "Done" }
+        }
+        // 2 models @ Done (1.0) + 2 @ Primed (0.5) → avg 0.75
+        #expect(abs(Pipeline.progress(of: [u], p) - 0.75) < 0.0001)
+    }
+
+    @Test("canAdvance when unit is Done but a member trails behind")
+    func canAdvanceSquad() {
+        let u = Unit(name: "Squad (3)", qty: 1, state: "Done")
+        for i in 0..<3 {
+            let m = SquadMember(index: i)
+            m.unit = u
+            if i == 0 { m.state = "Primed" }
+        }
+        #expect(Pipeline.canAdvance(u, p))
+        Pipeline.advanceOneStep(u, p)
+        #expect(u.state == "Done")
+        #expect(Members.effectiveState(of: u, at: 0) == "Base Coated")
+    }
+
+    @Test("segments count squad members individually")
+    func squadSegments() {
+        let u = Unit(name: "Squad (3)", qty: 1, state: "Primed")
+        for i in 0..<3 {
+            let m = SquadMember(index: i)
+            m.unit = u
+            if i == 0 { m.state = "Done" }
+        }
+        let segs = Pipeline.segments(of: [u], p)
+        #expect(segs.map(\.key) == ["Primed", "Done"])
+        #expect(segs.first { $0.key == "Done" }?.pct == (1.0 / 3.0) * 100)
+    }
 }

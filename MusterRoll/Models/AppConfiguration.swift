@@ -34,6 +34,9 @@ final class AppConfiguration {
 
     var lastBackupAt: Date?
 
+    /// One-time welcome flow; set on dismiss. Existing installs with data auto-skip.
+    var hasSeenOnboarding: Bool = false
+
     init() {}
 }
 

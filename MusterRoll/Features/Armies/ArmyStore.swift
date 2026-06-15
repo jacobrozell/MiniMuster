@@ -146,6 +146,17 @@ enum ArmyStore {
         try? ctx.save()
     }
 
+    /// Advance a chosen set of units one step (edit-mode batch). Returns count advanced.
+    @discardableResult
+    static func advance(_ units: [Unit], pipeline: [PipelineStage], in ctx: ModelContext) -> Int {
+        let targets = units.filter { Pipeline.canAdvance($0, pipeline) }
+        guard !targets.isEmpty else { return 0 }
+        UndoService.shared.record(.batchStates(targets.map { ($0.id, $0.state) }))
+        for u in targets { Pipeline.advanceOneStep(u, pipeline) }
+        try? ctx.save()
+        return targets.count
+    }
+
     /// Advance every unit in an army one step (mirrors the `bulk-next` action).
     @discardableResult
     static func advanceAll(in army: Army, global: [PipelineStage]?, in ctx: ModelContext) -> Int {

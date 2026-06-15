@@ -125,6 +125,77 @@ struct RenameArmySheet: View {
     }
 }
 
+/// Per-army pipeline editor. Mirrors `openArmyPipelineSettings` (`settings-panel.js`).
+struct ArmyPipelineEditorSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var context
+    @Bindable var army: Army
+    let globalPipeline: [PipelineStage]?
+
+    enum Mode: String, CaseIterable { case global, custom }
+
+    @State private var mode: Mode = .global
+    @State private var stages: [PipelineStage] = []
+
+    private var resolvedGlobal: [PipelineStage] { Pipeline.resolve(globalPipeline) }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Picker("Pipeline", selection: $mode) {
+                    Text("Use global pipeline").tag(Mode.global)
+                    Text("Custom for this army").tag(Mode.custom)
+                }
+                .pickerStyle(.segmented)
+
+                if mode == .custom {
+                    Section("Stages") {
+                        ForEach(Array(stages.enumerated()), id: \.offset) { index, _ in
+                            HStack {
+                                TextField("Stage name", text: $stages[index].key)
+                                ColorPicker("", selection: Binding(
+                                    get: { Color(hex: stages[index].hex) },
+                                    set: { stages[index].hex = $0.hexString }))
+                                .labelsHidden()
+                            }
+                        }
+                        .onDelete { stages.remove(atOffsets: $0) }
+                        .onMove { stages.move(fromOffsets: $0, toOffset: $1) }
+
+                        Button("Add stage", systemImage: "plus") {
+                            stages.append(PipelineStage(key: "New", hex: "#888888"))
+                        }
+                        Button("Reset to default") { stages = DefaultPipeline.stages }
+                    }
+                }
+            }
+            .navigationTitle("Army pipeline")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+                ToolbarItem(placement: .confirmationAction) { Button("Save") { save(); dismiss() } }
+                if mode == .custom { ToolbarItem(placement: .topBarLeading) { EditButton() } }
+            }
+            .onAppear {
+                let custom = army.customPipeline
+                mode = (custom?.isEmpty == false) ? .custom : .global
+                stages = Pipeline.resolve(custom ?? resolvedGlobal)
+            }
+        }
+    }
+
+    private func save() {
+        if mode == .global {
+            army.customPipeline = nil
+        } else {
+            let cleaned = stages
+                .filter { !$0.key.trimmingCharacters(in: .whitespaces).isEmpty }
+                .map { PipelineStage(key: $0.key, hex: safeColor($0.hex)) }
+            army.customPipeline = cleaned.isEmpty ? nil : cleaned
+        }
+        try? context.save()
+    }
+}
+
 /// Move-unit destination picker. Mirrors the `move` action.
 struct MoveUnitSheet: View {
     @Environment(\.dismiss) private var dismiss

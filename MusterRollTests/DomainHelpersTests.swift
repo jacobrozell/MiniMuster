@@ -21,6 +21,13 @@ struct SourceMatchTests {
         #expect(!SourceMatch.matches("Skaventide", ""))
         #expect(!SourceMatch.matches("Combat Patrol", "Spearhead"))
     }
+
+    @Test("parts splits on plus and normalizes")
+    func parts() {
+        #expect(SourceMatch.parts("  Foo + Bar  ") == ["foo", "bar"])
+        #expect(SourceMatch.parts("solo") == ["solo"])
+        #expect(SourceMatch.parts("++").isEmpty)
+    }
 }
 
 @Suite("FactionResolver")
@@ -53,6 +60,44 @@ struct FactionResolverTests {
         let r = FactionResolver.resolve(faction: "Grey Knights", game: "40k", overrides: o)
         #expect(r.crest == "MINE")
         #expect(r.color == "#123456")
+    }
+
+    @Test("compositeKey and flat resolution without game")
+    func compositeAndFlat() {
+        #expect(FactionResolver.compositeKey(game: "40k", faction: "Orks") == "40k:Orks")
+        #expect(FactionResolver.compositeKey(game: "", faction: "Orks") == "Orks")
+        let flat = FactionResolver.resolve(faction: "Grey Knights", game: "", overrides: [])
+        #expect(flat.crest == "GK")
+    }
+}
+
+@Suite("safeColor")
+struct SafeColorTests {
+    @Test("accepts valid hex and rejects unsafe values")
+    func hex() {
+        #expect(safeColor("#abc") == "#abc")
+        #expect(safeColor("#AABBCC") == "#AABBCC")
+        #expect(safeColor("javascript:alert(1)") == "#888")
+        #expect(safeColor(nil) == "#888")
+    }
+}
+
+@Suite("Limits")
+struct LimitsTests {
+    @Test("capped trims and clamps string length")
+    func capped() {
+        #expect("  hello  ".capped(3) == "hel")
+        #expect("x".capped(10) == "x")
+    }
+}
+
+@Suite("PaintType")
+struct PaintTypeTests {
+    @Test("known types map to default swatches")
+    func swatches() {
+        #expect(PaintType.swatchHex(for: "Base") == "#7a7a7a")
+        #expect(PaintType.swatchHex(for: "Unknown") == "#777")
+        #expect(PaintType.known.contains("Primer"))
     }
 }
 

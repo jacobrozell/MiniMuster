@@ -4,19 +4,24 @@ import SwiftData
 @main
 struct MusterRollApp: App {
     let container: ModelContainer
-    @State private var toast = ToastCenter()
+    @State private var banner = BannerCenter()
     @State private var undo = UndoService.shared
 
     init() {
-        container = AppContainer.make()
+        if ProcessInfo.processInfo.arguments.contains("UI-Testing-Persistent") {
+            container = AppContainer.uiTestPersistentContainer()
+        } else if ProcessInfo.processInfo.arguments.contains("UI-Testing") {
+            container = AppContainer.previewContainer()
+        } else {
+            container = AppContainer.make()
+        }
     }
 
     var body: some Scene {
         WindowGroup {
-            RootView()
-                .environment(toast)
+            AppShell()
+                .environment(banner)
                 .environment(undo)
-                .toastOverlay()
         }
         .modelContainer(container)
     }

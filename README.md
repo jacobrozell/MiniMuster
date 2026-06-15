@@ -1,19 +1,16 @@
-# The Muster Roll — iOS (scaffold)
+# MiniMuster — iOS
 
-A starter SwiftUI / SwiftData / Swift Testing project implementing **Milestone 1
-(Foundation)** of [`docs/ios-spec/`](../docs/ios-spec/). It compiles, launches to the
-two-tab shell with empty states, and ships the full pure-logic core (models, pipeline,
-progress, members, tags, source-match, faction catalogue) with unit tests.
+Native SwiftUI app for tracking Warhammer armies, painting progress, and paint inventory.
+**v1.0.0** — local-first, web-compatible import/export.
 
-This is a **working app**. Milestones **M1–M6** are implemented (foundation, Armies UI,
-filters/search/sort, Paint Rack CRUD + per-model squad tracking, import/export/backup, and
-settings/theming/undo). Only **M7** (test-coverage hardening + final a11y polish) remains —
-see [`docs/ios-spec/12-roadmap-acceptance.md`](../docs/ios-spec/12-roadmap-acceptance.md).
+Specs: [`docs/ios-native/`](../docs/ios-native/) (UI/UX) · [`docs/ios-spec/`](../docs/ios-spec/) (data/domain parity)
 
-## Generating the Xcode project
+## Requirements
 
-The `.xcodeproj` is **not** committed (it's a fragile generated artefact). Generate it with
-[XcodeGen](https://github.com/yonsson/XcodeGen):
+- Xcode 16+ (Swift 6, iOS 18 SDK)
+- [XcodeGen](https://github.com/yonsson/XcodeGen)
+
+## Setup
 
 ```bash
 brew install xcodegen
@@ -22,81 +19,91 @@ xcodegen generate
 open MusterRoll.xcodeproj
 ```
 
-Requirements: **Xcode 16+** (Swift 6, iOS 18 SDK).
+The `.xcodeproj` is generated locally and not committed.
 
-## Running tests
+## Tests
 
 ```bash
 cd ios
 xcodegen generate
-xcodebuild test -project MusterRoll.xcodeproj -scheme MusterRoll \
-  -destination 'platform=iOS Simulator,name=iPhone 16'
+
+# All tests + code coverage report
+./scripts/test-coverage.sh
+
+# Per-file breakdown
+./scripts/test-coverage.sh --files
+
+# Enforce a minimum app coverage threshold (optional)
+MIN_COVERAGE=40 ./scripts/test-coverage.sh
 ```
 
-## Layout
+Reports land in `.coverage/` (gitignored). Open `.coverage/TestResults.xcresult` in Xcode for line-by-line highlighting.
+
+Individual suites:
+
+```bash
+# Unit tests
+xcodebuild test -project MusterRoll.xcodeproj -scheme MusterRoll \
+  -destination 'platform=iOS Simulator,name=iPhone 17' \
+  -only-testing:MusterRollTests -parallel-testing-enabled NO
+
+# UI smoke tests
+xcodebuild test -project MusterRoll.xcodeproj -scheme MusterRoll \
+  -destination 'platform=iOS Simulator,name=iPhone 17' \
+  -only-testing:MusterRollUITests -parallel-testing-enabled NO
+```
+
+CI runs the full coverage script on `macos-15` with the iPhone 17 simulator and uploads the summary as a workflow artifact (see `.github/workflows/ios.yml`).
+
+## App structure
 
 ```
 MusterRoll/
-  App/            MusterRollApp, AppContainer, RootView
-  Models/         SwiftData @Model classes + value types
-  Domain/         pure logic (no SwiftData/SwiftUI imports) + faction catalogue
-  Features/       Armies & Paints screens (M1: empty-state shells)
-  DesignSystem/   colour tokens, Color(hex:)
-MusterRollTests/  Swift Testing suites
+  App/              RootView, AppRouter, AppContainer
+  Models/           SwiftData models
+  Domain/           Pipeline, filters, factions (pure Swift)
+  DataIO/           CSV import/export, JSON backup
+  Features/
+    Collection/     Army list → unit list → unit detail (split view)
+    Paints/         Paint list/grid → paint detail
+    Settings/       Theme, pipeline, data import/export
+  DesignSystem/     ProgressRing, StateChip, components
+  Widget/           App Group snapshot for home-screen widget
+  Support/          BannerCenter, UndoService
+MusterRollWidget/   “On the sprue” widget extension
+MusterRollTests/    Swift Testing (domain + stores + I/O)
+MusterRollUITests/  Launch, sample data, tab navigation smoke tests
 ```
 
-## What's implemented (M1)
+## Features (v1.0)
 
-- `Army`, `Unit`, `SquadMember`, `Paint`, `AppConfiguration` SwiftData models (CloudKit-ready
-  shape per `01-data-model.md §9`).
-- `PipelineStage`, `FactionPresetOverride` value types; `safeColor`; `Color(hex:)`; `Limits`.
-- `ModelCount`, `Pipeline` (progress / segments / advance), `Members`, `Tags`, `SourceMatch`.
-- Full faction catalogue (`FactionDefs`) + `FactionResolver` (alias normalize, composite/flat
-  resolution, fallback, override precedence).
-- `AppContainer` (on-disk + in-memory preview), singleton `AppConfiguration`, theme applied at
-  root.
-- Two-tab `RootView`; Paint Rack shows a read-only grid (full CRUD is M-later).
-- Swift Testing suites for the pure logic.
+**Collection** — searchable army list, filter sheet, overview stats, swipe-to-delete armies. Drill into an army for unit list with swipe advance/duplicate/delete, edit-mode multi-select batch advance, and unit detail form (squad tracking, spearhead, notes).
 
-## What's implemented (M2 — Armies UI)
+**Paints** — list or grid, search, filters, CRUD, source link to filter collection.
 
-- `ArmyStatsHeader` (7 stat tiles + stacked collection meter & legend).
-- `ArmyCard` (resolved crest + accent, name/meta/percent, collapse, army actions:
-  reset theme / rename / delete) with a per-army stacked meter.
-- `UnitRow` inline editing (name, source, qty stepper, tinted state menu, spearhead star,
-  multiline notes) + row actions (advance, duplicate, move, remove) and squad summary.
-- Footer actions: add unit, advance all, merge duplicates.
-- Sheets: new army (game/faction pickers), add unit, rename army, move unit.
-- `ArmyStore` mutations (add/rename/delete army, add/duplicate/move/delete unit, set state/
-  qty/spearhead, advance, advance-all, merge duplicates, member resize) — undo-ready.
-- Toolbar: new army, expand/collapse all.
-- Swift Testing `ArmyStoreTests` for the mutations.
+**Settings** — appearance, global pipeline, faction crest overrides, all import/export/backup/clear/sample data.
 
-## What's implemented (M3 / M4 / M6)
+**Platform** — iPhone + iPad `NavigationSplitView`, undo, banner feedback, home-screen widget (sprue model count).
 
-- **M3 — Filters/search/sort:** `ArmyFilter` (visible-armies builder) + `ArmyFilterBar`
-  (game/faction/state/source/tag menus, quick-view segmented control, spearhead toggle,
-  sort pickers), debounced-style search, persisted prefs, scoped `(filtered)` stats,
-  filtered-empty state, advance-visible.
-- **M4 — Paint Rack + squads:** full paint CRUD (`PaintStore`, `AddEditPaintSheet`),
-  type/brand/stock filters, scoped stats, source → Armies deep link (`AppRouter`); per-model
-  squad expansion in `UnitRow` (`SquadStore`, `SquadMemberRow`).
-- **M6 — Settings/theme/undo:** `SettingsScreen` (theme picker, global pipeline editor,
-  faction crest/colour overrides), `UndoService` (delete unit/army, state change, bulk
-  advance — wired to the Undo toolbar button), `ToastCenter`, and the 14-day backup reminder.
-- Tests: `ArmyFilterTests`, `SquadStoreTests`, `PaintStoreTests`, `UndoServiceTests`.
+Data formats match the web app: armies/paints CSV and full JSON backup.
 
-## What's implemented (M5)
+## Privacy
 
-- `CSV` parser/writer (RFC-4180 quoting, BOM, CRLF, TSV/semicolon detection); `HeaderMap`
-  and field normalizers.
-- Armies + Paints CSV import (grouping, squad members, dup merge, warnings) and export.
-- JSON full backup: web-compatible `Snapshot` DTOs, `BackupSanitizer` (size/strict-keys/cap/
-  clamp/`safeColor`), `BackupCodec` export + restore.
-- `CollectionStore` (replace/append/clear) builds models from drafts.
-- `DemoLoader` loads the bundled `Resources/*.csv` through the real import pipeline.
-- A minimal **Data** toolbar menu on both tabs: import (replace/append), export CSV, full
-  backup, restore, sample data, clear all.
-- Swift Testing suites for CSV, import, backup sanitizer, and apply.
+- In-app: **Settings → Privacy Policy**
+- Canonical document: [`docs/PRIVACY.md`](docs/PRIVACY.md)
+- **App Store URL:** enable GitHub Pages (`/docs`) → [`docs/privacy.html`](docs/privacy.html) at `https://jacobrozell.github.io/MiniMuster/privacy.html`
 
-Each source file cites the web module it mirrors.
+The app is local-first: no accounts, no analytics, no network transmission of your collection data.
+
+## App Store prep
+
+- **Metadata draft:** [`docs/APP_STORE.md`](docs/APP_STORE.md) — description, keywords, nutrition labels, review notes
+- **Screenshots:** `./scripts/capture-app-store-screenshots.sh` → `.app-store-screenshots/` (6 PNGs)
+- **Release checklist:** [`docs/RELEASE_1.0.0.md`](docs/RELEASE_1.0.0.md)
+
+## Version history
+
+| Version | Notes |
+|---------|--------|
+| **1.0.0** | Native redesign complete; production layout/a11y polish, widget, UI tests |
+| 0.x | Web-parity port (M1–M7) + native overhaul Phases 1–4 |

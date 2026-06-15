@@ -9,7 +9,17 @@ struct ArmyStatsHeader: View {
     let pipeline: [PipelineStage]
     var scoped: Bool = false
 
-    private let columns = [GridItem(.adaptive(minimum: 96), spacing: 8)]
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    private var statColumns: [GridItem] {
+        if dynamicTypeSize >= .accessibility5 {
+            [GridItem(.flexible())]
+        } else if dynamicTypeSize.isAccessibilitySize {
+            [GridItem(.flexible(), spacing: 8), GridItem(.flexible(), spacing: 8)]
+        } else {
+            [GridItem(.adaptive(minimum: 108), spacing: 8)]
+        }
+    }
 
     private func label(_ base: String) -> String { scoped ? "\(base) (filtered)" : base }
 
@@ -24,7 +34,7 @@ struct ArmyStatsHeader: View {
         let overall = Int((Pipeline.progress(of: u, pipeline) * 100).rounded())
 
         VStack(spacing: 12) {
-            LazyVGrid(columns: columns, spacing: 8) {
+            LazyVGrid(columns: statColumns, spacing: 8) {
                 StatTile(value: u.count, label: label("Unit Entries"))
                 StatTile(value: models, label: label("Models (est.)"), accent: true)
                 StatTile(value: based, label: label("Based"))
@@ -35,11 +45,17 @@ struct ArmyStatsHeader: View {
             }
 
             VStack(alignment: .leading, spacing: 4) {
-                HStack {
-                    Text(scoped ? "Filtered Progress (by model count)" : "Collection Progress (by model count)")
-                        .font(.caption).foregroundStyle(.secondary)
-                    Spacer()
-                    Text("\(overall)%").font(.caption.weight(.semibold))
+                HStack(alignment: .firstTextBaseline) {
+                    Text(scoped ? "Filtered progress (by model count)" : "Collection progress (by model count)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer(minLength: 8)
+                    Text("\(overall)%")
+                        .font(.caption.weight(.semibold))
+                        .monospacedDigit()
+                        .fixedSize()
                 }
                 ProgressMeter(segments: Pipeline.segments(of: u, pipeline))
                 ProgressLegend(segments: Pipeline.segments(of: u, pipeline))
