@@ -17,11 +17,12 @@ struct AppShell: View {
         }
         .task(id: showSplash) {
             guard showSplash else { return }
-            try? await Task.sleep(for: .milliseconds(850))
+            // Brief branded moment so the loader reads as intentional, not a flash.
+            try? await Task.sleep(for: .milliseconds(AppInfo.isUITesting ? 0 : 1_400))
             if reduceMotion {
                 showSplash = false
             } else {
-                withAnimation(.easeOut(duration: 0.35)) {
+                withAnimation(.easeOut(duration: 0.4)) {
                     showSplash = false
                 }
             }
