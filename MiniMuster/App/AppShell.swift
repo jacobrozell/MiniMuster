@@ -6,12 +6,14 @@ struct AppShell: View {
     @State private var showSplash = !AppInfo.isUITesting
 
     private var screenshotColorScheme: ColorScheme? {
-        ProcessInfo.processInfo.arguments.contains("UI-Testing-DarkTheme") ? .dark : nil
+        if ProcessInfo.processInfo.arguments.contains("UI-Testing-DarkTheme") { return .dark }
+        if ProcessInfo.processInfo.arguments.contains("UI-Testing-LightTheme") { return .light }
+        return nil
     }
 
     var body: some View {
         ZStack {
-            RootView()
+            rootContent
 
             if showSplash {
                 SplashView()
@@ -31,6 +33,16 @@ struct AppShell: View {
                     showSplash = false
                 }
             }
+        }
+    }
+
+    @ViewBuilder
+    private var rootContent: some View {
+        if ProcessInfo.processInfo.arguments.contains("UI-Testing-Accessibility") {
+            RootView()
+                .environment(\.dynamicTypeSize, .accessibility5)
+        } else {
+            RootView()
         }
     }
 }

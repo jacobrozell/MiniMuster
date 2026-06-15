@@ -171,16 +171,18 @@ Run on **iPhone** and **iPad** before submission:
 
 ## Explicitly deferred (post–1.0.0)
 
-| Feature | Target |
-|---------|--------|
-| CloudKit / iCloud sync | 1.1+ |
-| Unit photos | 1.1+ |
-| App Intents / Shortcuts | 1.1+ |
-| Extra widgets / Live Activities | 1.1+ |
-| Army drag-reorder | 1.0.1 |
-| Paint edit-mode batch | 1.0.1 |
-| Crash reporting (MetricKit) | Optional anytime |
-| GW barcode scan & box import | 1.2+ — spec: [`BARCODE_SCANNER.md`](BARCODE_SCANNER.md) |
+| Feature | Target | Spec |
+|---------|--------|------|
+| CloudKit / iCloud sync | 1.1–1.2 | [CLOUD_SYNC.md](CLOUD_SYNC.md) |
+| Encouraging notifications | 1.1+ | [PUSH_NOTIFICATIONS.md](PUSH_NOTIFICATIONS.md) |
+| Unit photos | 1.1+ | [MODEL_PHOTOS.md](MODEL_PHOTOS.md) |
+| App Intents / Shortcuts | 1.1+ | — |
+| Extra widgets / Live Activities | 1.1+ | [POLISH_IDEAS.md](POLISH_IDEAS.md) |
+| Army drag-reorder | 1.0.1 | — |
+| Paint edit-mode batch | 1.0.1 | — |
+| Crash reporting (MetricKit) | Optional anytime | — |
+| GW barcode scan & box import | 1.2+ | [BARCODE_SCANNER.md](BARCODE_SCANNER.md) |
+| Army list builder (Muster tab) | 1.2+ | [ARMY_LIST_BUILDER.md](ARMY_LIST_BUILDER.md) |
 
 ---
 

@@ -1,5 +1,8 @@
 import SwiftUI
 import SwiftData
+#if canImport(UIKit)
+import UIKit
+#endif
 
 /// Browse all armies; search and filter without inline unit editing.
 @MainActor
@@ -94,6 +97,7 @@ struct CollectionHomeView: View {
         .onChange(of: search) { router.collectionSearch = search }
         .onChange(of: router.pendingSourceFilter) { applyPendingSource() }
         .onChange(of: router.pendingDeepLink) { applyPendingDeepLink() }
+        .onChange(of: armies.count) { _, _ in autoSelectScreenshotArmyIfNeeded() }
         .confirmationDialog(
             "Delete entire army \"\(armyToDelete?.name ?? "")\" and all its units?",
             isPresented: Binding(get: { armyToDelete != nil }, set: { if !$0 { armyToDelete = nil } }),
@@ -128,55 +132,60 @@ struct CollectionHomeView: View {
 
     @ViewBuilder private var armyList: some View {
         let vis = visible
-        let list = List {
-            if scoped {
-                Section {
-                    HStack {
-                        Label(filterBannerText, systemImage: "line.3.horizontal.decrease.circle")
-                            .font(.subheadline)
-                        Spacer()
-                        Button("Clear") { clearFilters() }.font(.subheadline)
-                    }
-                }
-            }
+        if usesPadSidebarList {
+            List { armyListSections(vis: vis, padSidebar: true) }
+                .listStyle(.sidebar)
+        } else {
+            List { armyListSections(vis: vis, padSidebar: false) }
+                .listStyle(.insetGrouped)
+        }
+    }
+
+    @ViewBuilder
+    private func armyListSections(vis: [VisibleArmy], padSidebar: Bool) -> some View {
+        if scoped {
             Section {
-                ForEach(vis) { va in
-                    let pipeline = Pipeline.forArmy(va.army, global: globalPipeline)
-                    let pct = Int((Pipeline.progress(of: va.units, pipeline) * 100).rounded())
-                    let row = ArmyRow(army: va.army, overrides: overrides,
-                                      visibleUnitCount: va.units.count,
-                                      percentComplete: pct, scoped: scoped)
-                    Group {
-                        if usesPadSidebarList {
-                            Button {
-                                selectedArmyId = va.army.id
-                                onSelectArmy(va.army.id)
-                            } label: { row }
-                            .buttonStyle(.plain)
-                        } else {
-                            NavigationLink(value: CollectionRoute.army(va.army.id)) { row }
-                                .navigationLinkIndicatorVisibility(.hidden)
-                        }
-                    }
-                    .accessibilityIdentifier("army-\(va.army.name)")
-                    .listSidebarSelection(isSelected: va.army.id == selectedArmyId, enabled: usesPadSidebarList)
-                    .contextMenu {
-                        Button("Rename", systemImage: "pencil") { armyToRename = va.army }
-                        Button("Delete", systemImage: "trash", role: .destructive) {
-                            armyToDelete = va.army
-                        }
-                    }
-                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                        Button("Delete", role: .destructive) { armyToDelete = va.army }
-                            .accessibilityLabel("Delete army")
-                    }
+                HStack {
+                    Label(filterBannerText, systemImage: "line.3.horizontal.decrease.circle")
+                        .font(.subheadline)
+                    Spacer()
+                    Button("Clear") { clearFilters() }.font(.subheadline)
                 }
             }
         }
-        if usesPadSidebarList {
-            list.listStyle(.sidebar)
-        } else {
-            list.listStyle(.insetGrouped)
+        Section {
+            ForEach(vis) { va in
+                let pipeline = Pipeline.forArmy(va.army, global: globalPipeline)
+                let pct = Int((Pipeline.progress(of: va.units, pipeline) * 100).rounded())
+                let row = ArmyRow(army: va.army, overrides: overrides,
+                                  visibleUnitCount: va.units.count,
+                                  percentComplete: pct, scoped: scoped)
+                Group {
+                    if padSidebar {
+                        Button {
+                            selectedArmyId = va.army.id
+                            onSelectArmy(va.army.id)
+                        } label: { row }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("army-\(va.army.name)")
+                    } else {
+                        NavigationLink(value: CollectionRoute.army(va.army.id)) { row }
+                            .navigationLinkIndicatorVisibility(.hidden)
+                            .accessibilityIdentifier("army-\(va.army.name)")
+                    }
+                }
+                .listSidebarSelection(isSelected: va.army.id == selectedArmyId, enabled: padSidebar)
+                .contextMenu {
+                    Button("Rename", systemImage: "pencil") { armyToRename = va.army }
+                    Button("Delete", systemImage: "trash", role: .destructive) {
+                        armyToDelete = va.army
+                    }
+                }
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    Button("Delete", role: .destructive) { armyToDelete = va.army }
+                        .accessibilityLabel("Delete army")
+                }
+            }
         }
     }
 
@@ -266,9 +275,29 @@ struct CollectionHomeView: View {
         let outcome = DataActions.loadSampleOutcome(ctx: context)
         if outcome.success {
             banner.show(outcome.message)
+            autoSelectScreenshotArmyIfNeeded()
         } else {
             loadSampleError = (outcome.title, outcome.message)
         }
+    }
+
+    /// iPad split-view screenshots need an army selected; XCUITest sidebar taps are unreliable.
+    private func autoSelectScreenshotArmyIfNeeded() {
+#if canImport(UIKit)
+        guard ProcessInfo.processInfo.arguments.contains("UI-Testing"),
+              UIDevice.current.userInterfaceIdiom == .pad,
+              selectedArmyId == nil else { return }
+        Task { @MainActor in
+            for _ in 0..<30 {
+                if let army = armies.first(where: { $0.name == "Hallowed Knights" }) {
+                    selectedArmyId = army.id
+                    onSelectArmy(army.id)
+                    return
+                }
+                try? await Task.sleep(for: .milliseconds(100))
+            }
+        }
+#endif
     }
 }
 

@@ -37,6 +37,10 @@ final class AppConfiguration {
     /// One-time welcome flow; set on dismiss. Existing installs with data auto-skip.
     var hasSeenOnboarding: Bool = false
 
+    /// One-time Muster tab intro for upgrades after 1.2.
+    var hasSeenMusterIntro: Bool = false
+    var defaultBattleSizeKey40k: String = "strike-force"
+
     init() {}
 }
 

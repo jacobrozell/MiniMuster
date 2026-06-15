@@ -171,4 +171,45 @@ struct ViewSmokeTests {
         ViewTestHost.render(ImportResultsSheet(title: "Imported", message: "Done",
                                                warnings: ["Unknown faction"], failed: false))
     }
+
+    @Test("muster surfaces render at accessibility and landscape sizes")
+    func musterAdaptive() throws {
+        UnitCatalogLoader.loadIfNeeded()
+        let db = TestDatabase()
+        let roster = try RosterStore.addRoster(
+            name: "Grey Knights Strike Force",
+            game: "40k",
+            faction: "Grey Knights",
+            battleSizeKey: "strike-force",
+            linkedArmyId: nil,
+            in: db.context
+        )
+        _ = try RosterStore.addEntry(from: "40k:grey-knights:interceptor-squad", to: roster, in: db.context)
+
+        ViewTestHost.render(ViewTestHost.appEnvironments(
+            NavigationStack {
+                MusterHomeView(selectedRosterId: .constant(nil))
+            }
+        ), container: db.container)
+
+        ViewTestHost.render(ViewTestHost.appEnvironments(
+            NavigationStack {
+                RosterEditorView(rosterId: roster.id)
+            }
+        ), container: db.container)
+
+        for size: DynamicTypeSize in [.large, .accessibility3, .accessibility5] {
+            ViewTestHost.render(
+                RosterPointsBar(roster: roster)
+                    .environment(\.dynamicTypeSize, size)
+                    .frame(width: 390)
+            )
+            ViewTestHost.render(
+                RosterEntryRow(entry: roster.orderedEntries[0], roster: roster, match: nil)
+                    .environment(\.dynamicTypeSize, size)
+                    .environment(\.verticalSizeClass, .compact)
+                    .frame(width: 844)
+            )
+        }
+    }
 }

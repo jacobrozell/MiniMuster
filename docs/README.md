@@ -15,6 +15,7 @@ Index of project documentation for developers, release managers, and App Store s
 | Document | Audience | Contents |
 |----------|----------|----------|
 | [RELEASE_1.0.0.md](RELEASE_1.0.0.md) | Release manager | Ship blockers, polish checklist, manual regression |
+| [ROADMAP.md](ROADMAP.md) | Product & contributors | Post–1.0 sequencing — 1.0.1 → 1.2 Muster |
 | [APP_STORE.md](APP_STORE.md) | Release manager | Description, keywords, screenshots, review notes |
 
 ## Legal & accessibility
@@ -32,6 +33,13 @@ Index of project documentation for developers, release managers, and App Store s
 
 | Document | Audience | Contents |
 |----------|----------|----------|
+| [POLISH_IDEAS.md](POLISH_IDEAS.md) | Product & contributors | User-centric polish backlog — quick wins, 1.0.1, 1.1 |
+| [ARMY_LIST_BUILDER.md](ARMY_LIST_BUILDER.md) | Contributors | Muster tab — product spec & UX |
+| [ARMY_LIST_BUILDER_IMPL.md](ARMY_LIST_BUILDER_IMPL.md) | Implementers | Muster tab — files, code sketches, tests |
+| [ARMY_LIST_BUILDER_AGENT_PROMPT.md](ARMY_LIST_BUILDER_AGENT_PROMPT.md) | Implementers | Copy-paste agent prompt + MCP verify loop |
+| [PUSH_NOTIFICATIONS.md](PUSH_NOTIFICATIONS.md) | Contributors | Delight-first local notifications — milestones, backup, digest |
+| [CLOUD_SYNC.md](CLOUD_SYNC.md) | Contributors | iCloud + SwiftData sync — mandatory eventual path |
+| [MODEL_PHOTOS.md](MODEL_PHOTOS.md) | Contributors | Unit photos, progress timeline, branded share exports |
 | [BARCODE_SCANNER.md](BARCODE_SCANNER.md) | Contributors | GW barcode scan & box import spec (1.2+, not scheduled) |
 
 ## GitHub Pages

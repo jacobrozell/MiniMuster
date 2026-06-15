@@ -85,6 +85,7 @@ enum ArmyStore {
     static func delete(_ unit: Unit, in ctx: ModelContext) {
         UndoService.shared.record(.deleteUnit(UndoService.snapshot(unit)))
         let army = unit.army
+        PhotoStore.purgeFiles(for: unit)
         ctx.delete(unit)
         if let army { renumber(army) }
         try? ctx.save()
@@ -125,7 +126,10 @@ enum ArmyStore {
     static func setState(_ unit: Unit, _ state: String, in ctx: ModelContext) {
         guard unit.state != state else { return }
         UndoService.shared.record(.unitState(id: unit.id, previous: unit.state))
+        let previous = unit.state
         unit.state = state
+        StageEventStore.record(unit: unit, stageKey: state, previousStageKey: previous,
+                               memberIndex: nil, in: ctx)
         try? ctx.save()
     }
 
@@ -144,7 +148,12 @@ enum ArmyStore {
 
     static func advance(_ unit: Unit, pipeline: [PipelineStage], in ctx: ModelContext) {
         guard Pipeline.canAdvance(unit, pipeline) else { return }
+        let previousUnitState = unit.state
+        let previousMemberStates = Dictionary(uniqueKeysWithValues:
+            unit.orderedMembers.map { ($0.index, Members.effectiveState(of: unit, at: $0.index)) })
         Pipeline.advanceOneStep(unit, pipeline)
+        StageEventStore.recordAdvance(of: unit, previousUnitState: previousUnitState,
+                                      previousMemberStates: previousMemberStates, in: ctx)
         try? ctx.save()
     }
 

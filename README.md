@@ -168,12 +168,16 @@ The app is local-first: no accounts, no analytics, no network transmission of yo
 | [`docs/PRIVACY.md`](docs/PRIVACY.md) | Privacy policy (bundled in app) |
 | [`docs/accessibility.html`](docs/accessibility.html) | Accessibility statement (GitHub Pages) |
 | [`docs/BARCODE_SCANNER.md`](docs/BARCODE_SCANNER.md) | Future feature spec (post-1.0) |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md) | Post–1.0 release sequencing |
+| [`docs/ARMY_LIST_BUILDER.md`](docs/ARMY_LIST_BUILDER.md) | Muster tab product spec |
+| [`docs/ARMY_LIST_BUILDER_IMPL.md`](docs/ARMY_LIST_BUILDER_IMPL.md) | Muster tab implementation guide |
 
 ## Version history
 
 | Version | Notes |
 |---------|--------|
 | **1.0.0** | Native redesign complete; production layout/a11y polish, widget, UI tests |
+| **1.2** _(planned)_ | Muster tab, collection bridge, barcode scan — [ROADMAP.md](docs/ROADMAP.md) |
 | 0.x | Web-parity port (M1–M7) + native overhaul Phases 1–4 |
 
 ## Contact

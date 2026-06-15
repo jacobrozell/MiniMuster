@@ -1,0 +1,393 @@
+{
+  "faction": "Space Marines",
+  "game": "40k",
+  "units": [
+    {
+      "id": "40k:space-marines:captain",
+      "name": "Captain",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 80,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:librarian",
+      "name": "Librarian",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 65,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Psyker",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:chaplain",
+      "name": "Chaplain",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 65,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:lieutenant",
+      "name": "Lieutenant",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 55,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:techmarine",
+      "name": "Techmarine",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 55,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:apothecary",
+      "name": "Apothecary",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 50,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:ancient",
+      "name": "Ancient",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 50,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:intercessor-squad",
+      "name": "Intercessor Squad",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Battleline",
+      "basePoints": 80,
+      "modelCount": 5,
+      "keywords": [
+        "Battleline",
+        "Infantry"
+      ],
+      "aliases": [
+        "Intercessors"
+      ],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:assault-intercessors",
+      "name": "Assault Intercessors",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Battleline",
+      "basePoints": 75,
+      "modelCount": 5,
+      "keywords": [
+        "Battleline",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:heavy-intercessors",
+      "name": "Heavy Intercessors",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Battleline",
+      "basePoints": 100,
+      "modelCount": 5,
+      "keywords": [
+        "Battleline",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:incursor-squad",
+      "name": "Incursor Squad",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Battleline",
+      "basePoints": 80,
+      "modelCount": 5,
+      "keywords": [
+        "Battleline",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:infiltrator-squad",
+      "name": "Infiltrator Squad",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Battleline",
+      "basePoints": 100,
+      "modelCount": 5,
+      "keywords": [
+        "Battleline",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:hellblaster-squad",
+      "name": "Hellblaster Squad",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Other",
+      "basePoints": 110,
+      "modelCount": 5,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:aggressor-squad",
+      "name": "Aggressor Squad",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Elite",
+      "basePoints": 95,
+      "modelCount": 3,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:eradicator-squad",
+      "name": "Eradicator Squad",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Heavy Support",
+      "basePoints": 100,
+      "modelCount": 3,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:outrider-squad",
+      "name": "Outrider Squad",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Fast Attack",
+      "basePoints": 80,
+      "modelCount": 3,
+      "keywords": [
+        "Bike"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:inceptor-squad",
+      "name": "Inceptor Squad",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Fast Attack",
+      "basePoints": 120,
+      "modelCount": 3,
+      "keywords": [
+        "Infantry",
+        "Fly"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:bladeguard-veteran-squad",
+      "name": "Bladeguard Veteran Squad",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Elite",
+      "basePoints": 90,
+      "modelCount": 3,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:redemptor-dreadnought",
+      "name": "Redemptor Dreadnought",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Vehicle",
+      "basePoints": 195,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Walker"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:repulsor-executioner",
+      "name": "Repulsor Executioner",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Vehicle",
+      "basePoints": 235,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:impulsor",
+      "name": "Impulsor",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Transport",
+      "basePoints": 80,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Transport"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:gladiator-lancer",
+      "name": "Gladiator Lancer",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Vehicle",
+      "basePoints": 160,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:space-marines:land-raider",
+      "name": "Land Raider",
+      "faction": "Space Marines",
+      "game": "40k",
+      "category": "Vehicle",
+      "basePoints": 240,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Transport"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    }
+  ]
+}

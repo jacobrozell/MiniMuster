@@ -1,0 +1,375 @@
+{
+  "faction": "Grey Knights",
+  "game": "40k",
+  "units": [
+    {
+      "id": "40k:grey-knights:castellan-crowe",
+      "name": "Castellan Crowe",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 90,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Epic Hero",
+        "Infantry"
+      ],
+      "aliases": [
+        "Crowe"
+      ],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:brother-captain",
+      "name": "Brother-Captain",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 95,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:brotherhood-champion",
+      "name": "Brotherhood Champion",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 70,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:grand-master",
+      "name": "Grand Master",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 115,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:brotherhood-librarian",
+      "name": "Brotherhood Librarian",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 80,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Psyker",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:interceptor-squad",
+      "name": "Interceptor Squad",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Battleline",
+      "basePoints": 95,
+      "modelCount": 5,
+      "keywords": [
+        "Battleline",
+        "Infantry",
+        "Fly"
+      ],
+      "aliases": [
+        "Interceptors"
+      ],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:strike-squad",
+      "name": "Strike Squad",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Battleline",
+      "basePoints": 95,
+      "modelCount": 5,
+      "keywords": [
+        "Battleline",
+        "Infantry"
+      ],
+      "aliases": [
+        "Grey Knights Strike Squad"
+      ],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:purifier-squad",
+      "name": "Purifier Squad",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Elite",
+      "basePoints": 115,
+      "modelCount": 5,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:terminator-squad",
+      "name": "Terminator Squad",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Elite",
+      "basePoints": 190,
+      "modelCount": 5,
+      "keywords": [
+        "Infantry",
+        "Terminator"
+      ],
+      "aliases": [
+        "Brotherhood Terminators",
+        "Paladin Squad"
+      ],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:nemesis-dreadknight",
+      "name": "Nemesis Dreadknight",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Vehicle",
+      "basePoints": 210,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Walker"
+      ],
+      "aliases": [
+        "Dreadknight"
+      ],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:venerable-dreadnought",
+      "name": "Venerable Dreadnought",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Vehicle",
+      "basePoints": 140,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Dreadnought"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:land-raider",
+      "name": "Land Raider",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Vehicle",
+      "basePoints": 240,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Transport"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:rhino",
+      "name": "Rhino",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Transport",
+      "basePoints": 80,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Transport"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:razorback",
+      "name": "Razorback",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Vehicle",
+      "basePoints": 95,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Transport"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:stormraven-gunship",
+      "name": "Stormraven Gunship",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Vehicle",
+      "basePoints": 280,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Fly",
+        "Transport"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:purgation-squad",
+      "name": "Purgation Squad",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Heavy Support",
+      "basePoints": 115,
+      "modelCount": 5,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:servitors",
+      "name": "Servitors",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Other",
+      "basePoints": 40,
+      "modelCount": 4,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:brotherhood-techmarine",
+      "name": "Brotherhood Techmarine",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 75,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:brotherhood-apothecary",
+      "name": "Brotherhood Apothecary",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 70,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:ancient",
+      "name": "Ancient",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 50,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:grey-knights:brotherhood-ancient",
+      "name": "Brotherhood Ancient",
+      "faction": "Grey Knights",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 90,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    }
+  ]
+}

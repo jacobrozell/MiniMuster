@@ -1,0 +1,389 @@
+{
+  "faction": "Necrons",
+  "game": "40k",
+  "units": [
+    {
+      "id": "40k:necrons:overlord",
+      "name": "Overlord",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 85,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:lord",
+      "name": "Lord",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 65,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:royal-warden",
+      "name": "Royal Warden",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 50,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:technomancer",
+      "name": "Technomancer",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 80,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:chronomancer",
+      "name": "Chronomancer",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 65,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:plasmancer",
+      "name": "Plasmancer",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 65,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:skorpekh-lord",
+      "name": "Skorpekh Lord",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 90,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:necron-warriors",
+      "name": "Necron Warriors",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Battleline",
+      "basePoints": 90,
+      "modelCount": 10,
+      "keywords": [
+        "Battleline",
+        "Infantry"
+      ],
+      "aliases": [
+        "Warriors"
+      ],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:immortals",
+      "name": "Immortals",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Battleline",
+      "basePoints": 70,
+      "modelCount": 5,
+      "keywords": [
+        "Battleline",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:flayed-ones",
+      "name": "Flayed Ones",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Elite",
+      "basePoints": 60,
+      "modelCount": 5,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:lychguard",
+      "name": "Lychguard",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Elite",
+      "basePoints": 85,
+      "modelCount": 5,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:scarab-swarms",
+      "name": "Scarab Swarms",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Fast Attack",
+      "basePoints": 40,
+      "modelCount": 3,
+      "keywords": [
+        "Swarm"
+      ],
+      "aliases": [
+        "Scarabs"
+      ],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:canoptek-wraiths",
+      "name": "Canoptek Wraiths",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Fast Attack",
+      "basePoints": 110,
+      "modelCount": 3,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:destroyer-squad",
+      "name": "Destroyer Squad",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Fast Attack",
+      "basePoints": 55,
+      "modelCount": 3,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:lokhust-destroyers",
+      "name": "Lokhust Destroyers",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Fast Attack",
+      "basePoints": 40,
+      "modelCount": 1,
+      "keywords": [
+        "Bike"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:doomsday-ark",
+      "name": "Doomsday Ark",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Heavy Support",
+      "basePoints": 200,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:annihilation-barge",
+      "name": "Annihilation Barge",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Heavy Support",
+      "basePoints": 105,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:ghost-ark",
+      "name": "Ghost Ark",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Transport",
+      "basePoints": 115,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Transport"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:monolith",
+      "name": "Monolith",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Heavy Support",
+      "basePoints": 400,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:canoptek-spyder",
+      "name": "Canoptek Spyder",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Fast Attack",
+      "basePoints": 75,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:tomb-blades",
+      "name": "Tomb Blades",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Fast Attack",
+      "basePoints": 75,
+      "modelCount": 3,
+      "keywords": [
+        "Bike"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:triarch-praetorians",
+      "name": "Triarch Praetorians",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Elite",
+      "basePoints": 90,
+      "modelCount": 5,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:necrons:hexmark-destroyer",
+      "name": "Hexmark Destroyer",
+      "faction": "Necrons",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 75,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    }
+  ]
+}

@@ -28,7 +28,13 @@ enum SquadStore {
     /// Set a member's state, clearing the override when it equals the unit default (inherit).
     static func setMemberState(_ unit: Unit, index: Int, state: String, in ctx: ModelContext) {
         guard let m = unit.member(at: index) else { return }
+        let previous = Members.effectiveState(of: unit, at: index)
         m.state = (state == unit.state) ? nil : state
+        let next = Members.effectiveState(of: unit, at: index)
+        if previous != next {
+            StageEventStore.record(unit: unit, stageKey: next, previousStageKey: previous,
+                                   memberIndex: index, in: ctx)
+        }
         try? ctx.save()
     }
 
@@ -44,6 +50,11 @@ enum SquadStore {
         let cur = Members.effectiveState(of: unit, at: index)
         guard let next = Pipeline.next(after: cur, in: pipeline) else { return }
         m.state = (next == unit.state) ? nil : next
+        let effective = Members.effectiveState(of: unit, at: index)
+        if cur != effective {
+            StageEventStore.record(unit: unit, stageKey: effective, previousStageKey: cur,
+                                   memberIndex: index, in: ctx)
+        }
         try? ctx.save()
     }
 }

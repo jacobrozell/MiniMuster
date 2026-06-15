@@ -7,6 +7,7 @@ struct RootView: View {
     @Query private var armies: [Army]
     @Query private var paints: [Paint]
     @Query private var configs: [AppConfiguration]
+    @Query(sort: \Roster.sortIndex) private var rosters: [Roster]
 
     @State private var router = AppRouter()
     @State private var checkedBackup = false
@@ -17,6 +18,7 @@ struct RootView: View {
 
     private var theme: ThemePreference {
         if ProcessInfo.processInfo.arguments.contains("UI-Testing-DarkTheme") { return .dark }
+        if ProcessInfo.processInfo.arguments.contains("UI-Testing-LightTheme") { return .light }
         return configs.first?.theme ?? .system
     }
     private var unitCount: Int { armies.reduce(0) { $0 + $1.units.count } }
@@ -47,6 +49,14 @@ struct RootView: View {
             }
             .badge(unitCount)
 
+            Tab(value: AppRouter.Tab.muster) {
+                MusterTab()
+            } label: {
+                Label("Muster", systemImage: "flag.fill")
+                    .accessibilityIdentifier("tabMuster")
+            }
+            .badge(rosters.isEmpty ? 0 : rosters.count)
+
             Tab(value: AppRouter.Tab.paints) {
                 PaintsTab()
             } label: {
@@ -61,7 +71,9 @@ struct RootView: View {
         .bannerInset()
         .onAppear {
             AppContainer.ensureConfiguration(context)
+            applyUITestingLaunchOverrides()
             seedUITestDataIfNeeded()
+            seedMusterUITestDataIfNeeded()
             checkOnboarding()
             checkBackupReminder()
             refreshWidget()
@@ -99,6 +111,41 @@ struct RootView: View {
         }
     }
 
+    private func applyUITestingLaunchOverrides() {
+        if ProcessInfo.processInfo.arguments.contains("UI-Testing-SkipOnboarding") {
+            let cfg = Config.current(context)
+            cfg.hasSeenOnboarding = true
+            cfg.hasSeenMusterIntro = true
+            try? context.save()
+            showOnboarding = false
+        }
+        if ProcessInfo.processInfo.arguments.contains("UI-Testing-MusterHome") {
+            router.tab = .muster
+        }
+    }
+
+    private func seedMusterUITestDataIfNeeded() {
+        guard ProcessInfo.processInfo.arguments.contains("UI-Testing-MusterSeed") else { return }
+        guard rosters.isEmpty else { return }
+        UnitCatalogLoader.loadIfNeeded()
+        guard let roster = try? RosterStore.addRoster(
+            name: "Grey Knights Strike Force",
+            game: "40k",
+            faction: "Grey Knights",
+            battleSizeKey: "strike-force",
+            linkedArmyId: nil,
+            in: context
+        ) else { return }
+        _ = try? RosterStore.addEntry(from: "40k:grey-knights:interceptor-squad", to: roster, in: context)
+        _ = try? RosterStore.addEntry(from: "40k:grey-knights:strike-squad", to: roster, in: context)
+        _ = try? RosterStore.addEntry(from: "40k:grey-knights:nemesis-dreadknight", to: roster, in: context)
+        router.openMuster(rosterId: roster.id)
+        if let cfg = configs.first {
+            cfg.hasSeenMusterIntro = true
+            try? context.save()
+        }
+    }
+
     private func checkOnboarding() {
         guard let cfg = configs.first else { return }
         guard !cfg.hasSeenOnboarding else { return }
@@ -114,6 +161,7 @@ struct RootView: View {
     private func completeOnboarding(_ action: OnboardingView.Completion) {
         let cfg = Config.current(context)
         cfg.hasSeenOnboarding = true
+        cfg.hasSeenMusterIntro = true
         try? context.save()
         showOnboarding = false
         switch action {

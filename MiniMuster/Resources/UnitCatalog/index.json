@@ -1,0 +1,9 @@
+{
+  "factions": {
+    "40k:Grey Knights": "40k/grey-knights.json",
+    "40k:Space Marines": "40k/space-marines.json",
+    "40k:Necrons": "40k/necrons.json",
+    "40k:Orks": "40k/orks.json",
+    "40k:Chaos Space Marines": "40k/chaos-space-marines.json"
+  }
+}

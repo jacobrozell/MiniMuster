@@ -5,6 +5,8 @@ import SwiftData
 enum AppContainer {
     static let schema = Schema([
         Army.self, Unit.self, SquadMember.self, Paint.self, AppConfiguration.self,
+        ModelPhoto.self, StageEvent.self,
+        Roster.self, RosterEntry.self,
     ])
 
     /// On-disk container for the running app.
@@ -69,6 +71,11 @@ enum AppContainer {
         if ProcessInfo.processInfo.arguments.contains("UI-Testing-DarkTheme"),
            let cfg = try? context.fetch(FetchDescriptor<AppConfiguration>()).first {
             cfg.theme = .dark
+            try? context.save()
+        }
+        if ProcessInfo.processInfo.arguments.contains("UI-Testing-LightTheme"),
+           let cfg = try? context.fetch(FetchDescriptor<AppConfiguration>()).first {
+            cfg.theme = .light
             try? context.save()
         }
     }
