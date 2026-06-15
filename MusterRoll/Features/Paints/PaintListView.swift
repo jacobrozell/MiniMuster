@@ -1,5 +1,8 @@
 import SwiftUI
 import SwiftData
+#if canImport(UIKit)
+import UIKit
+#endif
 
 @MainActor
 struct PaintListView: View {
@@ -11,12 +14,21 @@ struct PaintListView: View {
     @Query private var configs: [AppConfiguration]
 
     @Binding var selectedPaintId: UUID?
+    var onSelectPaint: (UUID) -> Void = { _ in }
 
     @State private var search = ""
     @State private var showAdd = false
+    @State private var showSettings = false
     @State private var showFilters = false
     @AppStorage("paintUseGrid") private var useGrid = false
     @State private var filterTrigger = false
+    @State private var paintToDelete: Paint?
+    @State private var deleteWarningTrigger = false
+
+    init(selectedPaintId: Binding<UUID?>, onSelectPaint: @escaping (UUID) -> Void = { _ in }) {
+        _selectedPaintId = selectedPaintId
+        self.onSelectPaint = onSelectPaint
+    }
 
     private var cfg: AppConfiguration { configs.first ?? Config.current(context) }
     private var types: [String] { Array(Set(paints.map(\.type).filter { !$0.isEmpty })).sorted() }
@@ -24,6 +36,14 @@ struct PaintListView: View {
 
     private var filtersActive: Bool {
         cfg.paintTypeFilter != "All" || cfg.paintBrandFilter != "All" || cfg.paintLowOnly
+    }
+
+    private var filterCount: Int {
+        var count = 0
+        if cfg.paintTypeFilter != "All" { count += 1 }
+        if cfg.paintBrandFilter != "All" { count += 1 }
+        if cfg.paintLowOnly { count += 1 }
+        return count
     }
 
     private var filtered: [Paint] {
@@ -34,6 +54,14 @@ struct PaintListView: View {
             && (cfg.paintBrandFilter == "All" || p.brand == cfg.paintBrandFilter)
             && (q.isEmpty || "\(p.name) \(p.type) \(p.brand) \(p.source) \(p.notes)".lowercased().contains(q))
         }
+    }
+
+    private var usesPadSidebarList: Bool {
+#if canImport(UIKit)
+        UIDevice.current.userInterfaceIdiom == .pad
+#else
+        false
+#endif
     }
 
     var body: some View {
@@ -54,40 +82,64 @@ struct PaintListView: View {
                 return ok
             }
         }
+        .sheet(isPresented: $showSettings) { SettingsScreen() }
         .sheet(isPresented: $showFilters) {
             PaintFilterSheet(cfg: cfg, types: types, brands: brands)
         }
+        .confirmationDialog(
+            "Delete \"\(paintToDelete?.name ?? "")\"?",
+            isPresented: Binding(get: { paintToDelete != nil }, set: { if !$0 { paintToDelete = nil } }),
+            titleVisibility: .visible
+        ) {
+            Button("Delete", role: .destructive) {
+                if let paint = paintToDelete {
+                    if paint.id == selectedPaintId { selectedPaintId = nil }
+                    PaintStore.delete(paint, in: context)
+                    deleteWarningTrigger.toggle()
+                }
+                paintToDelete = nil
+            }
+            Button("Cancel", role: .cancel) { paintToDelete = nil }
+        }
         .sensoryFeedback(.selection, trigger: filterTrigger)
+        .sensoryFeedback(.warning, trigger: deleteWarningTrigger)
     }
 
     private var listBody: some View {
-        List(selection: $selectedPaintId) {
+        let list = List {
             if filtersActive || !search.isEmpty {
                 Section { summaryLine }
             }
             Section {
                 ForEach(filtered) { paint in
-                    paintRow(paint)
+                    Button {
+                        selectedPaintId = paint.id
+                        onSelectPaint(paint.id)
+                    } label: {
+                        paintRowLabel(paint)
+                    }
+                    .buttonStyle(.plain)
+                    .listRowBackground(paint.id == selectedPaintId ? Color.accentColor.opacity(0.12) : nil)
+                    .swipeActions(edge: .trailing) {
+                        Button("Delete", role: .destructive) { paintToDelete = paint }
+                    }
+                    .contextMenu { paintContextMenu(paint) }
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        return Group {
+            if usesPadSidebarList {
+                list.listStyle(.sidebar)
+            } else {
+                list.listStyle(.insetGrouped)
+            }
+        }
     }
 
     @ViewBuilder
-    private func paintRow(_ paint: Paint) -> some View {
+    private func paintRowLabel(_ paint: Paint) -> some View {
         let linked = PaintStore.linkedUnitCount(source: paint.source, armies: armies)
         PaintRow(paint: paint, linkedCount: linked)
-            .tag(paint.id as UUID?)
-            .swipeActions(edge: .trailing) {
-                Button("Delete", role: .destructive) { deletePaint(paint) }
-            }
-            .contextMenu { paintContextMenu(paint) }
-    }
-
-    private func deletePaint(_ paint: Paint) {
-        if paint.id == selectedPaintId { selectedPaintId = nil }
-        PaintStore.delete(paint, in: context)
     }
 
     @ViewBuilder
@@ -100,7 +152,7 @@ struct PaintListView: View {
             }
         }
         Button("Delete", systemImage: "trash", role: .destructive) {
-            deletePaint(paint)
+            paintToDelete = paint
         }
     }
 
@@ -108,12 +160,17 @@ struct PaintListView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) {
                 summaryLine.padding(.horizontal)
-                PaintGridView(paints: filtered) { paint in
+                PaintGridView(paints: filtered, linkedCount: linkedUnitCount) { paint in
                     selectedPaintId = paint.id
+                    onSelectPaint(paint.id)
                 }
             }
             .padding(.vertical)
         }
+    }
+
+    private func linkedUnitCount(for paint: Paint) -> Int {
+        PaintStore.linkedUnitCount(source: paint.source, armies: armies)
     }
 
     private var summaryLine: some View {
@@ -140,6 +197,11 @@ struct PaintListView: View {
                    ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle") {
                 showFilters = true
             }
+            .accessibilityLabel(filterCount > 0 ? "Filters, \(filterCount) active" : "Filters")
+        }
+        ToolbarItem(placement: .topBarTrailing) {
+            Button("Settings", systemImage: "gearshape") { showSettings = true }
+                .accessibilityIdentifier("settings")
         }
     }
 
@@ -151,6 +213,7 @@ struct PaintListView: View {
         } actions: {
             Button("Add paint") { showAdd = true }.buttonStyle(.borderedProminent)
         }
+        .safeAreaPadding(.bottom, 72)
     }
 
     private var noMatches: some View {

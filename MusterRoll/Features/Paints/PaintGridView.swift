@@ -3,6 +3,7 @@ import SwiftUI
 /// Optional grid layout for paints.
 struct PaintGridView: View {
     let paints: [Paint]
+    let linkedCount: (Paint) -> Int
     let onSelect: (Paint) -> Void
 
     private let columns = [GridItem(.adaptive(minimum: 140), spacing: 12)]
@@ -30,8 +31,18 @@ struct PaintGridView: View {
                     .overlay(RoundedRectangle(cornerRadius: 12).stroke(.separator))
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(gridAccessibilityLabel(for: paint))
+                .accessibilityHint("Opens paint details")
             }
         }
         .padding(.horizontal)
+    }
+
+    private func gridAccessibilityLabel(for paint: Paint) -> String {
+        var parts = [paint.name, paint.type, "quantity \(paint.qty)"]
+        if paint.low { parts.append("running low") }
+        let linked = linkedCount(paint)
+        if linked > 0 { parts.append("\(linked) linked units") }
+        return parts.joined(separator: ", ")
     }
 }
