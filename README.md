@@ -91,7 +91,7 @@ Data formats match the web app: armies/paints CSV and full JSON backup.
 
 - In-app: **Settings → Privacy Policy**
 - Canonical document: [`docs/PRIVACY.md`](docs/PRIVACY.md)
-- **App Store URL:** enable GitHub Pages (`/docs`) → [`docs/privacy.html`](docs/privacy.html) at `https://jacobrozell.github.io/MiniMuster/privacy.html`
+- **App Store URL:** [`docs/privacy.html`](docs/privacy.html) at `https://jacobrozell.github.io/MiniMuster/privacy.html`
 
 The app is local-first: no accounts, no analytics, no network transmission of your collection data.
 

@@ -141,17 +141,23 @@ struct CollectionHomeView: View {
                 ForEach(vis) { va in
                     let pipeline = Pipeline.forArmy(va.army, global: globalPipeline)
                     let pct = Int((Pipeline.progress(of: va.units, pipeline) * 100).rounded())
-                    Button {
-                        selectedArmyId = va.army.id
-                        onSelectArmy(va.army.id)
-                    } label: {
-                        ArmyRow(army: va.army, overrides: overrides,
-                                visibleUnitCount: va.units.count,
-                                percentComplete: pct, scoped: scoped)
+                    let row = ArmyRow(army: va.army, overrides: overrides,
+                                      visibleUnitCount: va.units.count,
+                                      percentComplete: pct, scoped: scoped)
+                    Group {
+                        if usesPadSidebarList {
+                            Button {
+                                selectedArmyId = va.army.id
+                                onSelectArmy(va.army.id)
+                            } label: { row }
+                            .buttonStyle(.plain)
+                        } else {
+                            NavigationLink(value: CollectionRoute.army(va.army.id)) { row }
+                                .navigationLinkIndicatorVisibility(.hidden)
+                        }
                     }
-                    .buttonStyle(.plain)
                     .accessibilityIdentifier("army-\(va.army.name)")
-                    .listRowBackground(va.army.id == selectedArmyId ? Color.accentColor.opacity(0.12) : nil)
+                    .listSidebarSelection(isSelected: va.army.id == selectedArmyId, enabled: usesPadSidebarList)
                     .contextMenu {
                         Button("Rename", systemImage: "pencil") { armyToRename = va.army }
                         Button("Delete", systemImage: "trash", role: .destructive) {

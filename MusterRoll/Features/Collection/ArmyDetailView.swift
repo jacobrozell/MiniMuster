@@ -52,6 +52,9 @@ struct ArmyDetailView: View {
 
     private var usesSpearhead: Bool { visibleUnits.contains { $0.spearhead != nil } }
     private var percent: Int { Int((Pipeline.progress(of: visibleUnits, pipeline) * 100).rounded()) }
+    private var usesPadSidebarList: Bool {
+        AdaptiveLayout.usesSidebarListStyle(horizontalSizeClass)
+    }
 
     private var selectedUnits: [Unit] {
         visibleUnits.filter { batchSelection.contains($0.id) }
@@ -218,15 +221,22 @@ struct ArmyDetailView: View {
                 .listRowBackground(Color.clear)
             } else {
                 ForEach(visibleUnits) { unit in
-                    Button {
-                        selectedUnitId = unit.id
-                        onSelectUnit(unit.id)
-                    } label: {
-                        unitRow(unit)
+                    Group {
+                        if usesPadSidebarList {
+                            Button {
+                                selectedUnitId = unit.id
+                                onSelectUnit(unit.id)
+                            } label: { unitRow(unit) }
+                            .buttonStyle(.plain)
+                        } else {
+                            NavigationLink(value: CollectionRoute.unit(unit.id)) {
+                                unitRow(unit)
+                            }
+                            .navigationLinkIndicatorVisibility(.hidden)
+                        }
                     }
-                    .buttonStyle(.plain)
                     .accessibilityIdentifier("unit-\(unit.name)")
-                    .listRowBackground(unit.id == selectedUnitId ? Color.accentColor.opacity(0.12) : nil)
+                    .listSidebarSelection(isSelected: unit.id == selectedUnitId, enabled: usesPadSidebarList)
                 }
             }
         }

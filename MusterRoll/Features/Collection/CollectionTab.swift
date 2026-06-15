@@ -84,10 +84,7 @@ struct CollectionTab: View {
         NavigationStack(path: $compactPath) {
             CollectionHomeView(
                 selectedArmyId: $selectedArmyId,
-                onSelectArmy: { armyId in
-                    selectedArmyId = armyId
-                    compactPath.append(CollectionRoute.army(armyId))
-                }
+                onSelectArmy: { selectedArmyId = $0 }
             )
             .navigationDestination(for: CollectionRoute.self) { route in
                 switch route {

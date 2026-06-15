@@ -43,10 +43,7 @@ struct PaintsTab: View {
         NavigationStack(path: $compactPath) {
             PaintListView(
                 selectedPaintId: $selectedPaintId,
-                onSelectPaint: { paintId in
-                    selectedPaintId = paintId
-                    compactPath.append(PaintRoute.paint(paintId))
-                }
+                onSelectPaint: { selectedPaintId = $0 }
             )
             .navigationDestination(for: PaintRoute.self) { route in
                 if case .paint(let paintId) = route {

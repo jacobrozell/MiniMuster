@@ -2,7 +2,7 @@
 
 **Effective date:** June 15, 2026  
 **App:** MiniMuster  
-**Bundle ID:** com.musterroll.app
+**Bundle ID:** com.jacobrozell.minimuster
 
 ## Summary
 

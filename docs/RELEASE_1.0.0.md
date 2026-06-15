@@ -26,8 +26,9 @@
 Do not submit until these are done.
 
 - [x] **App icon** — MM crest shield in `Assets.xcassets` / AppIcon (1024×1024, universal + dark + tinted).
-- [ ] **Screenshots (5–6)** — Run `./scripts/capture-app-store-screenshots.sh --all`; upload from `.app-store-screenshots/iphone/` and `.app-store-screenshots/ipad/`. See [`docs/APP_STORE.md`](APP_STORE.md).
-- [ ] **Hosted privacy policy URL** — `docs/privacy.html` ready; enable GitHub Pages (`/docs`) → `https://jacobrozell.github.io/MiniMuster/privacy.html`.
+- [x] **Screenshots (5–6)** — Run `./scripts/capture-app-store-screenshots.sh --all`; upload from `.app-store-screenshots/iphone/` and `.app-store-screenshots/ipad/`. See [`docs/APP_STORE.md`](APP_STORE.md).
+- [x] **Hosted privacy policy URL** — `docs/privacy.html` live at `https://jacobrozell.github.io/MiniMuster/privacy.html`.
+- [x] **App Group entitlements** — `group.com.jacobrozell.minimuster` on app + widget targets. Register the group in Apple Developer → Identifiers before archiving.
 
 - [ ] **Manual regression** — Run checklist below (from native spec §4).  
   _Deliverable:_ All 10 steps pass on iPhone + iPad.
@@ -187,8 +188,8 @@ Run on **iPhone** and **iPad** before submission:
 
 - [x] Track B complete — B1–B7 done; final device pass for C
 - [ ] Track C spot-check done
-- [ ] Track A blockers done
-- [ ] `MARKETING_VERSION` = `1.0.0` in `project.yml`
+- [ ] Track A blockers done (metadata paste + TestFlight + manual regression remain)
+- [x] `MARKETING_VERSION` = `1.0.0` in `project.yml`
 - [ ] Unit tests (62+) green in CI
 - [ ] UI smoke tests (3) green in CI
 - [ ] Git tag `ios/1.0.0` or `v1.0.0`

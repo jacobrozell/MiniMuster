@@ -96,14 +96,21 @@ struct PaintListView: View {
             }
             Section {
                 ForEach(filtered) { paint in
-                    Button {
-                        selectedPaintId = paint.id
-                        onSelectPaint(paint.id)
-                    } label: {
-                        paintRowLabel(paint)
+                    Group {
+                        if usesPadSidebarList {
+                            Button {
+                                selectedPaintId = paint.id
+                                onSelectPaint(paint.id)
+                            } label: { paintRowLabel(paint) }
+                            .buttonStyle(.plain)
+                        } else {
+                            NavigationLink(value: PaintRoute.paint(paint.id)) {
+                                paintRowLabel(paint)
+                            }
+                            .navigationLinkIndicatorVisibility(.hidden)
+                        }
                     }
-                    .buttonStyle(.plain)
-                    .listRowBackground(paint.id == selectedPaintId ? Color.accentColor.opacity(0.12) : nil)
+                    .listSidebarSelection(isSelected: paint.id == selectedPaintId, enabled: usesPadSidebarList)
                     .swipeActions(edge: .trailing) {
                         Button("Delete", role: .destructive) { paintToDelete = paint }
                     }

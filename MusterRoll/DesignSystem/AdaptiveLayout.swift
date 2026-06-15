@@ -21,3 +21,15 @@ enum AdaptiveLayout {
         }
     }
 }
+
+extension View {
+    /// Sidebar selection tint for split-view lists; omit on iPhone where `NavigationLink` handles navigation.
+    @ViewBuilder
+    func listSidebarSelection(isSelected: Bool, enabled: Bool) -> some View {
+        if enabled, isSelected {
+            listRowBackground(Color.accentColor.opacity(0.12))
+        } else {
+            self
+        }
+    }
+}

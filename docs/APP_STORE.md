@@ -14,6 +14,8 @@ Draft metadata for App Store submission. Copy into App Store Connect when ready.
 
 Until Pages is enabled, use the in-repo file for review: `docs/privacy.html`.
 
+**App Group (widget):** Register `group.com.jacobrozell.minimuster` under Apple Developer → Identifiers → App Groups, then enable it on both `com.jacobrozell.minimuster` and `com.jacobrozell.minimuster.widget` before archiving.
+
 ---
 
 ## App information
@@ -22,7 +24,7 @@ Until Pages is enabled, use the in-repo file for review: `docs/privacy.html`.
 |-------|--------|
 | **Name** | MiniMuster |
 | **Subtitle** | Track armies, units & paints |
-| **Bundle ID** | com.musterroll.app |
+| **Bundle ID** | com.jacobrozell.minimuster |
 | **SKU** | minimuster-ios-1 |
 | **Primary category** | Utilities |
 | **Secondary category** | Lifestyle |
@@ -164,6 +166,7 @@ MiniMuster is a local hobby tracker. No login is required. To explore with data,
 ## Pre-submission
 
 - [ ] `MARKETING_VERSION` = `1.0.0` in `project.yml`
+- [ ] App Group `group.com.jacobrozell.minimuster` registered in Apple Developer (app + widget entitlements)
 - [ ] Privacy URL live and matches bundled policy
 - [ ] Screenshots uploaded for all required sizes
 - [ ] Manual regression checklist (`docs/RELEASE_1.0.0.md`) passed on iPhone + iPad
