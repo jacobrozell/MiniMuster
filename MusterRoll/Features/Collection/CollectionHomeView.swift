@@ -1,5 +1,8 @@
 import SwiftUI
 import SwiftData
+#if canImport(UIKit)
+import UIKit
+#endif
 
 /// Browse all armies; search and filter without inline unit editing.
 @MainActor
@@ -39,6 +42,14 @@ struct CollectionHomeView: View {
         ArmyFilter.build(armies: armies, cfg: cfg, search: search, global: globalPipeline)
     }
 
+    private var usesPadSidebarList: Bool {
+#if canImport(UIKit)
+        UIDevice.current.userInterfaceIdiom == .pad
+#else
+        false
+#endif
+    }
+
     var body: some View {
         Group {
             if armies.isEmpty { emptyState }
@@ -68,7 +79,7 @@ struct CollectionHomeView: View {
         )) {
             if let army = armyToRename {
                 RenameArmySheet(current: army.name) { ArmyStore.rename(army, to: $0, in: context) }
-                    .presentationDetents([.height(200)])
+                    .presentationDetents([.medium])
             }
         }
         .alert(loadSampleError?.title ?? "Error", isPresented: Binding(
@@ -115,46 +126,55 @@ struct CollectionHomeView: View {
                 Button("Clear filters") { clearFilters() }.buttonStyle(.borderedProminent)
             }
         } else {
-            List {
-                if scoped {
-                    Section {
-                        HStack {
-                            Label(filterBannerText, systemImage: "line.3.horizontal.decrease.circle")
-                                .font(.subheadline)
-                            Spacer()
-                            Button("Clear") { clearFilters() }.font(.subheadline)
-                        }
-                    }
-                }
+            armyList
+        }
+    }
+
+    @ViewBuilder private var armyList: some View {
+        let vis = visible
+        let list = List {
+            if scoped {
                 Section {
-                    ForEach(vis) { va in
-                        let pipeline = Pipeline.forArmy(va.army, global: globalPipeline)
-                        let pct = Int((Pipeline.progress(of: va.units, pipeline) * 100).rounded())
-                        Button {
-                            selectedArmyId = va.army.id
-                            onSelectArmy(va.army.id)
-                        } label: {
-                            ArmyRow(army: va.army, overrides: overrides,
-                                    visibleUnitCount: va.units.count,
-                                    percentComplete: pct, scoped: scoped)
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityIdentifier("army-\(va.army.name)")
-                        .listRowBackground(va.army.id == selectedArmyId ? Color.accentColor.opacity(0.12) : nil)
-                        .contextMenu {
-                            Button("Rename", systemImage: "pencil") { armyToRename = va.army }
-                            Button("Delete", systemImage: "trash", role: .destructive) {
-                                armyToDelete = va.army
-                            }
-                        }
-                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                            Button("Delete", role: .destructive) { armyToDelete = va.army }
-                                .accessibilityLabel("Delete army")
-                        }
+                    HStack {
+                        Label(filterBannerText, systemImage: "line.3.horizontal.decrease.circle")
+                            .font(.subheadline)
+                        Spacer()
+                        Button("Clear") { clearFilters() }.font(.subheadline)
                     }
                 }
             }
-            .listStyle(.insetGrouped)
+            Section {
+                ForEach(vis) { va in
+                    let pipeline = Pipeline.forArmy(va.army, global: globalPipeline)
+                    let pct = Int((Pipeline.progress(of: va.units, pipeline) * 100).rounded())
+                    Button {
+                        selectedArmyId = va.army.id
+                        onSelectArmy(va.army.id)
+                    } label: {
+                        ArmyRow(army: va.army, overrides: overrides,
+                                visibleUnitCount: va.units.count,
+                                percentComplete: pct, scoped: scoped)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("army-\(va.army.name)")
+                    .listRowBackground(va.army.id == selectedArmyId ? Color.accentColor.opacity(0.12) : nil)
+                    .contextMenu {
+                        Button("Rename", systemImage: "pencil") { armyToRename = va.army }
+                        Button("Delete", systemImage: "trash", role: .destructive) {
+                            armyToDelete = va.army
+                        }
+                    }
+                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        Button("Delete", role: .destructive) { armyToDelete = va.army }
+                            .accessibilityLabel("Delete army")
+                    }
+                }
+            }
+        }
+        if usesPadSidebarList {
+            list.listStyle(.sidebar)
+        } else {
+            list.listStyle(.insetGrouped)
         }
     }
 

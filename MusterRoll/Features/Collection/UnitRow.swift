@@ -37,7 +37,8 @@ struct UnitRow: View {
             }
             .font(.caption)
             .foregroundStyle(.secondary)
-            .lineLimit(1)
+            .lineLimit(2)
+            .truncationMode(.tail)
             if unit.hasSquadMembers {
                 Text(Members.stateSummary(of: unit))
                     .font(.caption2)

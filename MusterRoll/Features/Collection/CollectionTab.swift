@@ -9,6 +9,7 @@ struct CollectionTab: View {
     @State private var selectedArmyId: UUID?
     @State private var selectedUnitId: UUID?
     @State private var compactPath = NavigationPath()
+    @State private var detailPath = NavigationPath()
 
     private var usesSplitLayout: Bool {
 #if canImport(UIKit)
@@ -26,9 +27,16 @@ struct CollectionTab: View {
                 compactView
             }
         }
-        .onChange(of: selectedArmyId) { _, _ in selectedUnitId = nil }
+        .onChange(of: selectedArmyId) { _, _ in
+            selectedUnitId = nil
+            detailPath = NavigationPath()
+        }
+        .onChange(of: detailPath) { _, path in
+            if path.isEmpty { selectedUnitId = nil }
+        }
     }
 
+    /// iPad: armies in the sidebar; army + unit detail share one navigation stack (no empty third column).
     private var splitView: some View {
         NavigationSplitView {
             NavigationStack {
@@ -42,23 +50,32 @@ struct CollectionTab: View {
                     }
                 }
             }
-            .navigationSplitViewColumnWidth(min: 280, ideal: 320)
-        } content: {
-            if let armyId = selectedArmyId {
-                ArmyDetailView(armyId: armyId, selectedUnitId: $selectedUnitId,
-                               onSelectUnit: { selectedUnitId = $0 })
-            } else {
-                ContentUnavailableView("Select an Army", systemImage: "shield",
-                                       description: Text("Choose an army from the list."))
-            }
+            .navigationSplitViewColumnWidth(min: 320, ideal: 380, max: 440)
         } detail: {
-            if let unitId = selectedUnitId {
-                UnitDetailView(unitId: unitId)
-            } else if selectedArmyId != nil {
-                ContentUnavailableView("Select a Unit", systemImage: "figure.stand",
-                                       description: Text("Choose a unit to view and edit."))
-            } else {
-                ContentUnavailableView("No Selection", systemImage: "sidebar.left")
+            NavigationStack(path: $detailPath) {
+                Group {
+                    if let armyId = selectedArmyId {
+                        ArmyDetailView(armyId: armyId, selectedArmyId: $selectedArmyId,
+                                       selectedUnitId: $selectedUnitId,
+                                       onSelectUnit: { unitId in
+                                           selectedUnitId = unitId
+                                           detailPath.append(CollectionRoute.unit(unitId))
+                                       })
+                    } else {
+                        ContentUnavailableView("Select an Army", systemImage: "shield",
+                                               description: Text("Choose an army from the list."))
+                    }
+                }
+                .navigationDestination(for: CollectionRoute.self) { route in
+                    switch route {
+                    case .unit(let unitId):
+                        UnitDetailView(unitId: unitId)
+                    case .overview:
+                        CollectionOverviewView()
+                    case .army:
+                        EmptyView()
+                    }
+                }
             }
         }
     }
@@ -77,7 +94,8 @@ struct CollectionTab: View {
                 case .overview:
                     CollectionOverviewView()
                 case .army(let armyId):
-                    ArmyDetailView(armyId: armyId, selectedUnitId: $selectedUnitId,
+                    ArmyDetailView(armyId: armyId, selectedArmyId: $selectedArmyId,
+                                   selectedUnitId: $selectedUnitId,
                                    onSelectUnit: { unitId in
                                        selectedUnitId = unitId
                                        compactPath.append(CollectionRoute.unit(unitId))
