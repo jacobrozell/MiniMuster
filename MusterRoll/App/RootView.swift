@@ -104,10 +104,9 @@ struct RootView: View {
     }
 
     private func completeOnboarding(_ action: OnboardingView.Completion) {
-        if let cfg = configs.first {
-            cfg.hasSeenOnboarding = true
-            try? context.save()
-        }
+        let cfg = Config.current(context)
+        cfg.hasSeenOnboarding = true
+        try? context.save()
         showOnboarding = false
         switch action {
         case .dismiss: break

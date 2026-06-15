@@ -40,6 +40,11 @@ struct ViewSmokeTests {
         ViewTestHost.render(ArmyRow(army: army, overrides: [], visibleUnitCount: 1,
                                     percentComplete: 42, scoped: false))
         ViewTestHost.render(UnitRow(unit: unit, pipeline: DefaultPipeline.stages, showSpearhead: true))
+        ViewTestHost.render(
+            UnitRow(unit: unit, pipeline: DefaultPipeline.stages, showSpearhead: true)
+                .environment(\.dynamicTypeSize, .accessibility3)
+                .frame(width: 320)
+        )
         ViewTestHost.render(PaintRow(paint: paint, linkedCount: 1))
     }
 

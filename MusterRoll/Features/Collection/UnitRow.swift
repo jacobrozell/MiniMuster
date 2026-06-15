@@ -7,19 +7,33 @@ struct UnitRow: View {
     let pipeline: [PipelineStage]
     let showSpearhead: Bool
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    private var stacksStateChip: Bool { dynamicTypeSize.isAccessibilitySize }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text(unit.name)
-                    .font(.body.weight(.medium))
-                    .lineLimit(2)
-                    .truncationMode(.tail)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-                    .layoutPriority(1)
-                StateChip(state: unit.state, pipeline: pipeline)
-                    .fixedSize()
-                    .layoutPriority(-1)
+            if stacksStateChip {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(unit.name)
+                        .font(.body.weight(.medium))
+                        .lineLimit(3)
+                        .fixedSize(horizontal: false, vertical: true)
+                    StateChip(state: unit.state, pipeline: pipeline)
+                }
+            } else {
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    Text(unit.name)
+                        .font(.body.weight(.medium))
+                        .lineLimit(2)
+                        .truncationMode(.tail)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                        .layoutPriority(1)
+                    StateChip(state: unit.state, pipeline: pipeline)
+                        .fixedSize()
+                        .layoutPriority(-1)
+                }
             }
             HStack(spacing: 6) {
                 if !unit.source.isEmpty {

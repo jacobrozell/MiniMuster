@@ -8,6 +8,9 @@ struct MusterRollApp: App {
     @State private var undo = UndoService.shared
 
     init() {
+        if ProcessInfo.processInfo.arguments.contains("UI-Testing-ResetPersistent") {
+            AppContainer.resetUITestPersistentStore()
+        }
         if ProcessInfo.processInfo.arguments.contains("UI-Testing-Persistent") {
             container = AppContainer.uiTestPersistentContainer()
         } else if ProcessInfo.processInfo.arguments.contains("UI-Testing") {

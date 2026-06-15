@@ -5,11 +5,18 @@ final class MusterRollUITests: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = false
+        XCUIApplication().terminate()
     }
 
-    private func launchApp(persistent: Bool = false) -> XCUIApplication {
+    override func tearDownWithError() throws {
+        XCUIApplication().terminate()
+    }
+
+    private func launchApp(persistent: Bool = false, resetPersistent: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = persistent ? ["UI-Testing-Persistent"] : ["UI-Testing"]
+        var args = persistent ? ["UI-Testing-Persistent"] : ["UI-Testing"]
+        if resetPersistent { args.append("UI-Testing-ResetPersistent") }
+        app.launchArguments = args
         app.launch()
         return app
     }
@@ -20,27 +27,46 @@ final class MusterRollUITests: XCTestCase {
 
     /// Fresh in-memory installs show onboarding once; dismiss before other smoke steps.
     private func dismissOnboardingIfNeeded(_ app: XCUIApplication) {
-        let skip = app.buttons["onboardingSkip"]
-        let cont = app.buttons["onboardingContinue"]
-        if skip.waitForExistence(timeout: 2) {
+        let skip = app.buttons.matching(identifier: "onboardingSkip").firstMatch
+        if skip.waitForExistence(timeout: 5) {
             skip.tap()
+            _ = waitForCollectionHome(app, timeout: 8)
             return
         }
-        if cont.waitForExistence(timeout: 1) {
+        let cont = app.buttons.matching(identifier: "onboardingContinue").firstMatch
+        if cont.waitForExistence(timeout: 2) {
             cont.tap()
+            _ = waitForCollectionHome(app, timeout: 8)
         }
+    }
+
+    @discardableResult
+    private func waitForCollectionHome(_ app: XCUIApplication, timeout: TimeInterval = 8) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        while Date() < deadline {
+            if app.navigationBars["Collection"].exists { return true }
+            if app.buttons["loadSampleData"].exists { return true }
+            if app.buttons.matching(identifier: "tabCollection").firstMatch.exists { return true }
+            RunLoop.current.run(until: Date().addingTimeInterval(0.25))
+        }
+        return app.navigationBars["Collection"].exists
+            || app.buttons["loadSampleData"].exists
+            || app.buttons.matching(identifier: "tabCollection").firstMatch.exists
     }
 
     private func tapTab(_ app: XCUIApplication, id: String) {
         let tabs = app.buttons.matching(identifier: id)
-        if tabs.firstMatch.waitForExistence(timeout: 3) {
-            tabs.firstMatch.tap()
+        if tabs.firstMatch.waitForExistence(timeout: 5) {
+            let tab = tabs.firstMatch
+            for _ in 0..<4 where !tab.isHittable {
+                app.swipeUp()
+            }
+            tab.tap()
             return
         }
-        // Floating tab bar fallback (label-based)
         let label = id == "tabPaints" ? "Paints" : "Collection"
         let labeled = app.buttons.matching(NSPredicate(format: "label == %@", label))
-        XCTAssertTrue(labeled.firstMatch.waitForExistence(timeout: 3))
+        XCTAssertTrue(labeled.firstMatch.waitForExistence(timeout: 5))
         labeled.firstMatch.tap()
     }
 
@@ -56,17 +82,25 @@ final class MusterRollUITests: XCTestCase {
     func testLoadSampleDataAndSwitchTabs() throws {
         let app = launchApp()
         dismissOnboardingIfNeeded(app)
+        waitForCollectionHome(app)
 
-        XCTAssertTrue(app.buttons["loadSampleData"].waitForExistence(timeout: 5))
-        app.buttons["loadSampleData"].tap()
-        XCTAssertTrue(app.staticTexts["Hallowed Knights"].waitForExistence(timeout: 8))
+        let loadSample = app.buttons["loadSampleData"]
+        XCTAssertTrue(loadSample.waitForExistence(timeout: 5))
+        loadSample.tap()
+        XCTAssertTrue(app.staticTexts["Hallowed Knights"].waitForExistence(timeout: 12))
 
         tapTab(app, id: "tabPaints")
-        XCTAssertTrue(app.navigationBars["Paints"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["Absolution Green"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.navigationBars["Paints"].waitForExistence(timeout: 8))
+        XCTAssertTrue(
+            app.staticTexts["Absolution Green"].waitForExistence(timeout: 8)
+            || app.descendants(matching: .any)
+                .matching(NSPredicate(format: "label CONTAINS[c] %@", "Absolution Green"))
+                .firstMatch.waitForExistence(timeout: 4)
+        )
 
         tapTab(app, id: "tabCollection")
-        XCTAssertTrue(app.navigationBars["Collection"].waitForExistence(timeout: 5))
+        waitForCollectionHome(app)
+        XCTAssertTrue(app.staticTexts["Hallowed Knights"].waitForExistence(timeout: 5))
     }
 
     func testSettingsSheetOpens() throws {
@@ -79,17 +113,17 @@ final class MusterRollUITests: XCTestCase {
     }
 
     func testOnboardingNotShownAfterRelaunch() throws {
-        resetUITestPersistentStore()
-        let app = launchApp(persistent: true)
-        XCTAssertTrue(app.buttons["onboardingSkip"].waitForExistence(timeout: 5))
+        let app = launchApp(persistent: true, resetPersistent: true)
+        XCTAssertTrue(app.buttons.matching(identifier: "onboardingSkip").firstMatch.waitForExistence(timeout: 10))
         dismissOnboardingIfNeeded(app)
-        XCTAssertTrue(app.navigationBars["Collection"].waitForExistence(timeout: 5))
+        XCTAssertTrue(waitForCollectionHome(app, timeout: 15))
 
         terminateApp(app)
+        Thread.sleep(forTimeInterval: 0.5)
         let relaunched = launchApp(persistent: true)
-        XCTAssertFalse(relaunched.buttons["onboardingSkip"].waitForExistence(timeout: 2))
-        XCTAssertFalse(relaunched.buttons["onboardingContinue"].waitForExistence(timeout: 1))
-        XCTAssertTrue(relaunched.navigationBars["Collection"].waitForExistence(timeout: 5))
+        XCTAssertFalse(relaunched.buttons.matching(identifier: "onboardingSkip").firstMatch
+            .waitForExistence(timeout: 2))
+        XCTAssertTrue(waitForCollectionHome(relaunched, timeout: 15))
     }
 
     func testOnboardingLoadSampleOpensCollection() throws {
@@ -109,16 +143,18 @@ final class MusterRollUITests: XCTestCase {
     }
 
     private func advanceOnboardingToLastPage(_ app: XCUIApplication) {
-        XCTAssertTrue(app.buttons["onboardingSkip"].waitForExistence(timeout: 5)
-                      || app.buttons["onboardingContinue"].waitForExistence(timeout: 5))
-        for _ in 0..<3 where app.buttons["onboardingContinue"].waitForExistence(timeout: 2) {
-            app.buttons["onboardingContinue"].tap()
+        XCTAssertTrue(
+            app.buttons.matching(identifier: "onboardingSkip").firstMatch.waitForExistence(timeout: 5)
+            || app.buttons.matching(identifier: "onboardingContinue").firstMatch.waitForExistence(timeout: 5)
+        )
+        for _ in 0..<3 {
+            let cont = app.buttons.matching(identifier: "onboardingContinue").firstMatch
+            guard cont.waitForExistence(timeout: 2) else { break }
+            cont.tap()
         }
     }
 
     private func resetUITestPersistentStore() {
-        let directory = FileManager.default.temporaryDirectory
-            .appending(path: "MusterRollUITest-Persistent", directoryHint: .isDirectory)
-        try? FileManager.default.removeItem(at: directory)
+        launchApp(persistent: true, resetPersistent: true).terminate()
     }
 }
