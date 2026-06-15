@@ -5,6 +5,10 @@ struct AppShell: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var showSplash = !AppInfo.isUITesting
 
+    private var screenshotColorScheme: ColorScheme? {
+        ProcessInfo.processInfo.arguments.contains("UI-Testing-DarkTheme") ? .dark : nil
+    }
+
     var body: some View {
         ZStack {
             RootView()
@@ -15,6 +19,7 @@ struct AppShell: View {
                     .zIndex(1)
             }
         }
+        .preferredColorScheme(screenshotColorScheme)
         .task(id: showSplash) {
             guard showSplash else { return }
             // Brief branded moment so the loader reads as intentional, not a flash.

@@ -36,6 +36,10 @@ targets:
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         UILaunchStoryboardName: LaunchScreen
+        CFBundleURLTypes:
+          - CFBundleURLName: com.jacobrozell.minimuster
+            CFBundleURLSchemes:
+              - minimuster
     dependencies:
       - target: MiniMusterWidget
         embed: true

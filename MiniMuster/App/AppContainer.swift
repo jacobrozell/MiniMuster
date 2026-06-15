@@ -66,6 +66,11 @@ enum AppContainer {
             context.insert(AppConfiguration())
             try? context.save()
         }
+        if ProcessInfo.processInfo.arguments.contains("UI-Testing-DarkTheme"),
+           let cfg = try? context.fetch(FetchDescriptor<AppConfiguration>()).first {
+            cfg.theme = .dark
+            try? context.save()
+        }
     }
 }
 

@@ -2,6 +2,8 @@
 
 Draft metadata for App Store submission. Copy into App Store Connect when ready.
 
+**See also:** [Documentation index](README.md) · [Release checklist](RELEASE_1.0.0.md) · [Development guide](DEVELOPMENT.md) · [Screenshot script](../scripts/capture-app-store-screenshots.sh)
+
 ---
 
 ## Privacy policy URL
@@ -90,6 +92,8 @@ Use the GitHub repo or a personal site:
 
 `https://github.com/jacobrozell/MiniMuster`
 
+**Support email (optional in App Store Connect):** [jacob.rozell83@gmail.com](mailto:jacob.rozell83@gmail.com)
+
 ---
 
 ## Marketing URL (optional)
@@ -116,19 +120,29 @@ Aligns with `docs/PRIVACY.md` and in-app Settings → Privacy Policy. Accessibil
 Capture with:
 
 ```bash
-# iPhone (6.7" — App Store required size)
-./scripts/capture-app-store-screenshots.sh --iphone
+# Everything (recommended before upload)
+./scripts/capture-app-store-screenshots.sh --all --all-variants
 
-# iPad Pro 13" (recommended for iPad listing)
-./scripts/capture-app-store-screenshots.sh --ipad
-
-# Both devices
-./scripts/capture-app-store-screenshots.sh --all
+# Single device / variant
+./scripts/capture-app-store-screenshots.sh --iphone --light
+./scripts/capture-app-store-screenshots.sh --iphone --dark
+./scripts/capture-app-store-screenshots.sh --iphone --accessibility
+./scripts/capture-app-store-screenshots.sh --ipad --dark
 ```
 
-Output:
-- `.app-store-screenshots/iphone/` — 6 PNGs (iPhone 17 Pro Max)
-- `.app-store-screenshots/ipad/` — 6 PNGs (iPad Pro 13-inch M5)
+Output layout (6 PNGs per folder):
+
+```
+.app-store-screenshots/
+  iphone/
+    light/
+    dark/
+    accessibility/
+  ipad/
+    light/
+    dark/
+    accessibility/
+```
 
 | File | Screen |
 |------|--------|
@@ -139,9 +153,14 @@ Output:
 | `05-paints` | Paint inventory |
 | `06-settings-data` | Settings / Data section |
 
+**Variants**
+- `light` — default appearance
+- `dark` — dark theme forced for marketing
+- `accessibility` — largest Dynamic Type (AX5) for Larger Text screenshots
+
 **Required device sizes (verify in App Store Connect at submit time):**
 - 6.7" display (iPhone 15 Pro Max / 16 Pro Max class) — `./scripts/capture-app-store-screenshots.sh --iphone` (uses `iPhone 17 Pro Max`)
-- 6.5" if still listed — `IPHONE_DESTINATION='platform=iOS Simulator,name=iPhone 11 Pro Max' ./scripts/capture-app-store-screenshots.sh --iphone`
+- 6.5" if still listed — `IPHONE_DESTINATION='platform=iOS Simulator,name=iPhone 11 Pro Max' ./scripts/capture-app-store-screenshots.sh --iphone --light`
 - iPad Pro 13" for iPad listing — `./scripts/capture-app-store-screenshots.sh --ipad` (uses `iPad Pro 13-inch (M5)`)
 
 ---

@@ -6,6 +6,12 @@ import UIKit
 /// Captures App Store marketing screenshots. Run via scripts/capture-app-store-screenshots.sh
 final class AppStoreScreenshotsUITests: XCTestCase {
 
+    private enum CaptureVariant: String {
+        case light
+        case dark
+        case accessibility
+    }
+
     override func setUpWithError() throws {
         continueAfterFailure = false
     }
@@ -41,7 +47,12 @@ final class AppStoreScreenshotsUITests: XCTestCase {
             tabs.firstMatch.tap()
             return
         }
-        let label = id == "tabPaints" ? "Paints" : "Collection"
+        let label: String
+        switch id {
+        case "tabPaints": label = "Paints"
+        case "tabCollection": label = "Collection"
+        default: label = id
+        }
         let labeled = app.buttons.matching(NSPredicate(format: "label == %@", label))
         XCTAssertTrue(labeled.firstMatch.waitForExistence(timeout: 3))
         labeled.firstMatch.tap()
@@ -54,12 +65,21 @@ final class AppStoreScreenshotsUITests: XCTestCase {
             .waitForExistence(timeout: timeout)
     }
 
+    private func tapRow(_ row: XCUIElement, in app: XCUIApplication) {
+        scrollToReveal(row, in: app)
+        if row.isHittable {
+            row.tap()
+            return
+        }
+        row.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+    }
+
     private func openArmy(named name: String, in app: XCUIApplication) {
         let id = "army-\(name)"
         for query in [app.buttons, app.otherElements] {
             let row = query[id]
             if row.waitForExistence(timeout: 5) {
-                row.tap()
+                tapRow(row, in: app)
                 return
             }
         }
@@ -67,7 +87,7 @@ final class AppStoreScreenshotsUITests: XCTestCase {
             .matching(NSPredicate(format: "label CONTAINS[c] %@", name))
             .firstMatch
         XCTAssertTrue(fallback.waitForExistence(timeout: 5))
-        fallback.tap()
+        tapRow(fallback, in: app)
     }
 
     private func scrollToReveal(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 6) {
@@ -81,7 +101,7 @@ final class AppStoreScreenshotsUITests: XCTestCase {
         for query in [app.buttons, app.otherElements] {
             let row = query[id]
             if row.waitForExistence(timeout: 5) {
-                row.tap()
+                tapRow(row, in: app)
                 return
             }
         }
@@ -89,7 +109,7 @@ final class AppStoreScreenshotsUITests: XCTestCase {
             .matching(NSPredicate(format: "label CONTAINS[c] %@", name))
             .firstMatch
         XCTAssertTrue(fallback.waitForExistence(timeout: 5))
-        fallback.tap()
+        tapRow(fallback, in: app)
     }
 
     private func tapSettings(_ app: XCUIApplication) {
@@ -132,23 +152,56 @@ final class AppStoreScreenshotsUITests: XCTestCase {
     private func tapLoadSampleData(_ app: XCUIApplication) {
         let button = app.buttons["loadSampleData"]
         XCTAssertTrue(button.waitForExistence(timeout: 5))
-        for _ in 0..<6 where !button.isHittable {
-            app.swipeUp()
+        scrollToReveal(button, in: app, maxSwipes: 8)
+        if button.isHittable {
+            button.tap()
+        } else {
+            button.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
         }
-        XCTAssertTrue(button.isHittable, "Load sample data button not hittable")
-        button.tap()
         XCTAssertTrue(
             waitForLabel("Hallowed Knights", in: app, timeout: 20),
             "Sample data did not load"
         )
     }
 
-    /// Single-session flow: empty → sample data → army → unit → paints → settings.
-    func testCaptureAppStoreScreenshots() throws {
-        let app = XCUIApplication()
+    private func configureAppForCapture(_ app: XCUIApplication, variant: CaptureVariant) {
         app.launchArguments = ["UI-Testing"]
+
+        switch variant {
+        case .light:
+            XCUIDevice.shared.appearance = .light
+        case .dark:
+            XCUIDevice.shared.appearance = .dark
+        case .accessibility:
+            XCUIDevice.shared.appearance = .light
+            app.launchEnvironment["UIPreferredContentSizeCategoryName"] =
+                "UICTContentSizeCategoryAccessibilityExtraExtraExtraLarge"
+        }
+    }
+
+    private func applyTheme(named theme: String, in app: XCUIApplication) {
+        tapSettings(app)
+        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
+        let themeButton = app.buttons[theme]
+        XCTAssertTrue(themeButton.waitForExistence(timeout: 3), "Theme control not found: \(theme)")
+        themeButton.tap()
+        dismissSettings(app)
+    }
+
+    private func runCaptureFlow(variant: CaptureVariant) throws {
+        let app = XCUIApplication()
+        configureAppForCapture(app, variant: variant)
         app.launch()
         dismissOnboarding(app)
+
+        switch variant {
+        case .light:
+            applyTheme(named: "Light", in: app)
+        case .dark:
+            applyTheme(named: "Dark", in: app)
+        case .accessibility:
+            break
+        }
 
         XCTAssertTrue(app.navigationBars["Collection"].waitForExistence(timeout: 5))
         try saveScreenshot(app, name: "01-empty-collection")
@@ -162,6 +215,7 @@ final class AppStoreScreenshotsUITests: XCTestCase {
         app.swipeUp()
         try saveScreenshot(app, name: "06-settings-data")
         dismissSettings(app)
+        tapTab(app, id: "tabCollection")
 
         openArmy(named: "Hallowed Knights", in: app)
         let lordVigilant = app.descendants(matching: .any)
@@ -179,5 +233,17 @@ final class AppStoreScreenshotsUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Paints"].waitForExistence(timeout: 5))
         XCTAssertTrue(waitForLabel("Absolution Green", in: app))
         try saveScreenshot(app, name: "05-paints")
+    }
+
+    func testCaptureAppStoreScreenshotsLight() throws {
+        try runCaptureFlow(variant: .light)
+    }
+
+    func testCaptureAppStoreScreenshotsDark() throws {
+        try runCaptureFlow(variant: .dark)
+    }
+
+    func testCaptureAppStoreScreenshotsAccessibility() throws {
+        try runCaptureFlow(variant: .accessibility)
     }
 }

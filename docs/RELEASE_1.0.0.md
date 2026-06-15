@@ -4,7 +4,7 @@
 
 **Status:** In progress — Track B largely complete; app icon, store assets, and submission prep underway.
 
-**Related specs:** [`docs/ios-native/11-roadmap-and-acceptance.md`](../../docs/ios-native/11-roadmap-and-acceptance.md) · [`PRIVACY.md`](PRIVACY.md) · [`BARCODE_SCANNER.md`](BARCODE_SCANNER.md) _(future)_
+**Related docs:** [`README.md`](README.md) · [`DEVELOPMENT.md`](DEVELOPMENT.md) · [`APP_STORE.md`](APP_STORE.md) · [`PRIVACY.md`](PRIVACY.md) · [`BARCODE_SCANNER.md`](BARCODE_SCANNER.md) _(future)_
 
 ---
 
@@ -26,7 +26,7 @@
 Do not submit until these are done.
 
 - [x] **App icon** — MM crest shield in `Assets.xcassets` / AppIcon (1024×1024, universal + dark + tinted).
-- [x] **Screenshots (5–6)** — Run `./scripts/capture-app-store-screenshots.sh --all`; upload from `.app-store-screenshots/iphone/` and `.app-store-screenshots/ipad/`. See [`docs/APP_STORE.md`](APP_STORE.md).
+- [x] **Screenshots (5–6)** — Run `./scripts/capture-app-store-screenshots.sh --all --all-variants`; upload from `.app-store-screenshots/iphone/` and `.app-store-screenshots/ipad/` variant folders. See [`docs/APP_STORE.md`](APP_STORE.md).
 - [x] **Hosted privacy policy URL** — `docs/privacy.html` live at `https://jacobrozell.github.io/MiniMuster/privacy.html`.
 - [x] **App Group entitlements** — `group.com.jacobrozell.minimuster` on app + widget targets. Register the group in Apple Developer → Identifiers before archiving.
 
@@ -148,7 +148,7 @@ Not new features — verification pass. Code-side fixes applied; device verifica
 - [x] **Reduce Motion** — Banner transition gated; ProgressRing gauge animation gated.
 - [ ] **iPad split view** — Sidebar army → content units → detail unit (manual verify).
 
-Reference: [`docs/ios-native/09-ipad-and-accessibility.md`](../../docs/ios-native/09-ipad-and-accessibility.md).
+Reference: [`ACCESSIBILITY.md`](../MiniMuster/Resources/ACCESSIBILITY.md) and [`accessibility.html`](accessibility.html).
 
 ---
 
@@ -190,8 +190,8 @@ Run on **iPhone** and **iPad** before submission:
 - [ ] Track C spot-check done
 - [ ] Track A blockers done (metadata paste + TestFlight + manual regression remain)
 - [x] `MARKETING_VERSION` = `1.0.0` in `project.yml`
-- [ ] Unit tests (62+) green in CI
-- [ ] UI smoke tests (3) green in CI
+- [ ] Unit tests (~180) green in CI
+- [ ] UI smoke tests green in CI
 - [ ] Git tag `ios/1.0.0` or `v1.0.0`
 - [ ] App Store submission
 

@@ -15,7 +15,10 @@ struct RootView: View {
     @State private var showSettings = false
     @AppStorage("backupReminderSnoozedUntil") private var backupReminderSnoozedUntil = 0.0
 
-    private var theme: ThemePreference { configs.first?.theme ?? .system }
+    private var theme: ThemePreference {
+        if ProcessInfo.processInfo.arguments.contains("UI-Testing-DarkTheme") { return .dark }
+        return configs.first?.theme ?? .system
+    }
     private var unitCount: Int { armies.reduce(0) { $0 + $1.units.count } }
 
     /// Changes when sprue/total model counts change, not only army or unit row counts.
