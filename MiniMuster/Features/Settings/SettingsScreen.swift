@@ -32,13 +32,21 @@ struct SettingsScreen: View {
 
                 SettingsDataSection()
 
+                Section("Help & Feedback") {
+                    NavigationLink { AccessibilityView() } label: {
+                        Label("Accessibility", systemImage: "accessibility")
+                    }
+                    NavigationLink { PrivacyPolicyView() } label: {
+                        Label("Privacy Policy", systemImage: "hand.raised")
+                    }
+                }
+
                 Section("About") {
                     LabeledContent("App", value: AppInfo.displayName)
                     LabeledContent("Version") {
                         Text(Bundle.main.appVersion)
                             .foregroundStyle(.secondary)
                     }
-                    NavigationLink("Privacy Policy") { PrivacyPolicyView() }
                     Text("For the Emperor · For the Great Horned Rat · Sigmar Watches")
                         .font(.caption).foregroundStyle(.secondary)
                 }

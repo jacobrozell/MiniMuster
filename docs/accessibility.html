@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Accessibility — MiniMuster</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      max-width: 42rem;
+      margin: 2rem auto;
+      padding: 0 1.25rem;
+      color: #1c1c1e;
+      background: #fff;
+    }
+    @media (prefers-color-scheme: dark) {
+      body { color: #f2f2f7; background: #000; }
+      a { color: #64d2ff; }
+    }
+    h1 { font-size: 1.75rem; margin-bottom: 0.25rem; }
+    h2 { font-size: 1.15rem; margin-top: 2rem; }
+    h3 { font-size: 1.05rem; margin-top: 1.25rem; }
+    p, li { margin: 0.6rem 0; }
+    ul { padding-left: 1.25rem; }
+    .meta { color: #636366; font-size: 0.95rem; }
+    hr { border: none; border-top: 1px solid #c7c7cc; margin: 2rem 0; }
+    @media (prefers-color-scheme: dark) {
+      hr { border-top-color: #38383a; }
+      .meta { color: #aeaeb2; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Accessibility — MiniMuster (iOS)</h1>
+  <p class="meta"><strong>Last updated:</strong> June 15, 2026<br>
+  <strong>App:</strong> MiniMuster<br>
+  <strong>Bundle ID:</strong> com.jacobrozell.minimuster</p>
+
+  <h2>Overview</h2>
+  <p>MiniMuster is designed to work with built-in iPhone and iPad accessibility features. You can browse armies and units, manage paints, change settings, import and export data, and use the home-screen widget with the supports listed below.</p>
+
+  <h2>Supported features</h2>
+
+  <h3>VoiceOver</h3>
+  <p>Lists, buttons, tabs, and swipe actions include accessibility labels and hints. Examples:</p>
+  <ul>
+    <li>Army and unit rows announce name, faction, progress, and painting state.</li>
+    <li>Swipe actions on units are labeled (for example, advance painting state, duplicate, delete).</li>
+    <li>Collection overview and stat headers announce progress percentages.</li>
+    <li>Paint rows and grid items announce name, type, brand, and quantity.</li>
+    <li>Status banners are announced when they appear.</li>
+  </ul>
+  <p><strong>Turn on:</strong> Settings → Accessibility → VoiceOver (or ask Siri to turn VoiceOver on).</p>
+
+  <h3>Larger Text</h3>
+  <p>The app uses Dynamic Type and adapts layout at larger text sizes. At accessibility sizes, list rows may stack content (for example, unit name above the state chip), stat grids move to a single column, and iPad split-view columns widen to fit text.</p>
+  <p><strong>Turn on:</strong> Settings → Accessibility → Display &amp; Text Size → Larger Text (adjust the slider or enable Larger Accessibility Sizes).</p>
+
+  <h3>Dark Interface</h3>
+  <p>MiniMuster supports light and dark appearance. You can follow the system setting or choose a theme in the app.</p>
+  <p><strong>In the app:</strong> Settings → Theme → Dark, Light, or System.</p>
+  <p><strong>System-wide:</strong> Settings → Display &amp; Brightness → Appearance.</p>
+
+  <h3>Reduced Motion</h3>
+  <p>When Reduce Motion is enabled, decorative animations are minimized or removed — including splash and onboarding transitions, progress ring animation, and banner slide-in effects. Core functionality is unchanged.</p>
+  <p><strong>Turn on:</strong> Settings → Accessibility → Motion → Reduce Motion.</p>
+
+  <h2>Common tasks</h2>
+  <p>With the features above enabled, you should be able to complete everyday tasks in MiniMuster, including:</p>
+  <ul>
+    <li>First launch and onboarding</li>
+    <li>Browsing and searching your collection</li>
+    <li>Opening army and unit details, editing notes, and advancing painting states</li>
+    <li>Managing paint inventory</li>
+    <li>Changing theme and other preferences in Settings</li>
+    <li>Importing, exporting, and backing up your data</li>
+  </ul>
+
+  <h2>Feedback</h2>
+  <p>If something is hard to use with accessibility features enabled, please contact us. We want to improve MiniMuster for everyone.</p>
+  <p><strong>Email:</strong> <a href="mailto:jrozell@myocv.com">jrozell@myocv.com</a></p>
+
+  <hr>
+  <p class="meta"><em>This page describes MiniMuster for iOS (version 1.0.0 and later). A copy is bundled in the app under Settings → Accessibility.</em></p>
+</body>
+</html>

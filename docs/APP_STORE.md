@@ -14,6 +14,20 @@ Draft metadata for App Store submission. Copy into App Store Connect when ready.
 
 Until Pages is enabled, use the in-repo file for review: `docs/privacy.html`.
 
+---
+
+## Accessibility URL
+
+**Hosted page (same GitHub Pages `/docs` source):**
+
+`https://jacobrozell.github.io/MiniMuster/accessibility.html`
+
+Declare in App Store Connect → App Information → **Accessibility URL**.
+
+Until Pages is enabled, use the in-repo file for review: `docs/accessibility.html`.
+
+**Declared features (1.0.0):** VoiceOver, Larger Text, Dark Interface, Reduced Motion.
+
 **App Group (widget):** Register `group.com.jacobrozell.minimuster` under Apple Developer → Identifiers → App Groups, then enable it on both `com.jacobrozell.minimuster` and `com.jacobrozell.minimuster.widget` before archiving.
 
 ---
@@ -93,7 +107,7 @@ Same as support URL, or omit.
 | Data used to track you | None |
 | Third-party SDKs | None |
 
-Aligns with `docs/PRIVACY.md` and in-app Settings → Privacy Policy.
+Aligns with `docs/PRIVACY.md` and in-app Settings → Privacy Policy. Accessibility: `docs/accessibility.html` and Settings → Accessibility.
 
 ---
 
