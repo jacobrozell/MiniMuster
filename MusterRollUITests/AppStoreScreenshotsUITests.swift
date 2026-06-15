@@ -86,26 +86,55 @@ final class AppStoreScreenshotsUITests: XCTestCase {
         fallback.tap()
     }
 
-    private func popToCollectionRoot(_ app: XCUIApplication) {
-        for _ in 0..<4 {
-            if app.buttons["settings"].waitForExistence(timeout: 1) { return }
-            let back = app.navigationBars.buttons.firstMatch
-            guard back.exists else { return }
-            back.tap()
+    private func tapSettings(_ app: XCUIApplication) {
+#if canImport(UIKit)
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            let more = app.buttons["More"]
+            if more.waitForExistence(timeout: 3) {
+                more.tap()
+                let settings = app.buttons["Settings"]
+                if settings.waitForExistence(timeout: 3) {
+                    settings.tap()
+                    return
+                }
+            }
         }
+#endif
+        for query in [
+            app.buttons.matching(identifier: "settings"),
+            app.buttons.matching(NSPredicate(format: "label == 'Settings'")),
+            app.toolbars.buttons.matching(identifier: "settings"),
+            app.toolbars.buttons.matching(NSPredicate(format: "label == 'Settings'"))
+        ] {
+            if query.firstMatch.waitForExistence(timeout: 2) {
+                query.firstMatch.tap()
+                return
+            }
+        }
+        XCTFail("Settings button not found")
+    }
+
+    private func dismissSettings(_ app: XCUIApplication) {
+        let done = app.buttons.matching(NSPredicate(format: "label == 'Done' OR label == 'Close'"))
+        if done.firstMatch.waitForExistence(timeout: 2) {
+            done.firstMatch.tap()
+            return
+        }
+        app.swipeDown()
     }
 
     private func tapLoadSampleData(_ app: XCUIApplication) {
         let button = app.buttons["loadSampleData"]
         XCTAssertTrue(button.waitForExistence(timeout: 5))
-        for _ in 0..<4 where !button.isHittable {
+        for _ in 0..<6 where !button.isHittable {
             app.swipeUp()
         }
-        if button.isHittable {
-            button.tap()
-        } else {
-            button.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
-        }
+        XCTAssertTrue(button.isHittable, "Load sample data button not hittable")
+        button.tap()
+        XCTAssertTrue(
+            waitForLabel("Hallowed Knights", in: app, timeout: 20),
+            "Sample data did not load"
+        )
     }
 
     /// Single-session flow: empty → sample data → army → unit → paints → settings.
@@ -119,8 +148,14 @@ final class AppStoreScreenshotsUITests: XCTestCase {
         try saveScreenshot(app, name: "01-empty-collection")
 
         tapLoadSampleData(app)
-        XCTAssertTrue(waitForLabel("Hallowed Knights", in: app, timeout: 15))
         try saveScreenshot(app, name: "02-collection-armies")
+
+        // Capture settings while the collection sidebar is visible (iPad split view hides it after tab switches).
+        tapSettings(app)
+        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
+        app.swipeUp()
+        try saveScreenshot(app, name: "06-settings-data")
+        dismissSettings(app)
 
         openArmy(named: "Hallowed Knights", in: app)
         XCTAssertTrue(waitForLabel("Lord-Vigilant", in: app, timeout: 15))
@@ -134,20 +169,5 @@ final class AppStoreScreenshotsUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Paints"].waitForExistence(timeout: 5))
         XCTAssertTrue(waitForLabel("Absolution Green", in: app))
         try saveScreenshot(app, name: "05-paints")
-
-        tapTab(app, id: "tabCollection")
-#if canImport(UIKit)
-        if UIDevice.current.userInterfaceIdiom != .pad {
-            popToCollectionRoot(app)
-        }
-#else
-        popToCollectionRoot(app)
-#endif
-        let settings = app.buttons.matching(identifier: "settings")
-        XCTAssertTrue(settings.firstMatch.waitForExistence(timeout: 10))
-        settings.firstMatch.tap()
-        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
-        app.swipeUp()
-        try saveScreenshot(app, name: "06-settings-data")
     }
 }

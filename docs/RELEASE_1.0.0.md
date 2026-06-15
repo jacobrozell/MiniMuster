@@ -26,7 +26,7 @@
 Do not submit until these are done.
 
 - [x] **App icon** — MM crest shield in `Assets.xcassets` / AppIcon (1024×1024, universal + dark + tinted).
-- [ ] **Screenshots (5–6)** — Run `./scripts/capture-app-store-screenshots.sh`; upload from `.app-store-screenshots/`. See [`docs/APP_STORE.md`](APP_STORE.md).
+- [ ] **Screenshots (5–6)** — Run `./scripts/capture-app-store-screenshots.sh --all`; upload from `.app-store-screenshots/iphone/` and `.app-store-screenshots/ipad/`. See [`docs/APP_STORE.md`](APP_STORE.md).
 - [ ] **Hosted privacy policy URL** — `docs/privacy.html` ready; enable GitHub Pages (`/docs`) → `https://jacobrozell.github.io/MiniMuster/privacy.html`.
 
 - [ ] **Manual regression** — Run checklist below (from native spec §4).  

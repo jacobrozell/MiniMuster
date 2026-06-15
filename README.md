@@ -98,7 +98,7 @@ The app is local-first: no accounts, no analytics, no network transmission of yo
 ## App Store prep
 
 - **Metadata draft:** [`docs/APP_STORE.md`](docs/APP_STORE.md) — description, keywords, nutrition labels, review notes
-- **Screenshots:** `./scripts/capture-app-store-screenshots.sh` → `.app-store-screenshots/` (6 PNGs)
+- **Screenshots:** `./scripts/capture-app-store-screenshots.sh --all` → `.app-store-screenshots/iphone/` + `.app-store-screenshots/ipad/` (6 PNGs each)
 - **Release checklist:** [`docs/RELEASE_1.0.0.md`](docs/RELEASE_1.0.0.md)
 
 ## Version history

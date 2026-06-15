@@ -100,10 +100,19 @@ Aligns with `docs/PRIVACY.md` and in-app Settings → Privacy Policy.
 Capture with:
 
 ```bash
-./scripts/capture-app-store-screenshots.sh
+# iPhone (6.7" — App Store required size)
+./scripts/capture-app-store-screenshots.sh --iphone
+
+# iPad Pro 13" (recommended for iPad listing)
+./scripts/capture-app-store-screenshots.sh --ipad
+
+# Both devices
+./scripts/capture-app-store-screenshots.sh --all
 ```
 
-Output: `.app-store-screenshots/` (6 PNGs)
+Output:
+- `.app-store-screenshots/iphone/` — 6 PNGs (iPhone 17 Pro Max)
+- `.app-store-screenshots/ipad/` — 6 PNGs (iPad Pro 13-inch M5)
 
 | File | Screen |
 |------|--------|
@@ -115,9 +124,9 @@ Output: `.app-store-screenshots/` (6 PNGs)
 | `06-settings-data` | Settings / Data section |
 
 **Required device sizes (verify in App Store Connect at submit time):**
-- 6.7" display (iPhone 15 Pro Max / 16 Pro Max class) — use `iPhone 17 Pro Max` simulator
-- 6.5" if still listed — `iPhone 11 Pro Max` or current equivalent
-- iPad Pro 13" for iPad listing (optional but recommended; run script with `DESTINATION='platform=iOS Simulator,name=iPad Pro 13-inch (M4)'`)
+- 6.7" display (iPhone 15 Pro Max / 16 Pro Max class) — `./scripts/capture-app-store-screenshots.sh --iphone` (uses `iPhone 17 Pro Max`)
+- 6.5" if still listed — `IPHONE_DESTINATION='platform=iOS Simulator,name=iPhone 11 Pro Max' ./scripts/capture-app-store-screenshots.sh --iphone`
+- iPad Pro 13" for iPad listing — `./scripts/capture-app-store-screenshots.sh --ipad` (uses `iPad Pro 13-inch (M5)`)
 
 ---
 
