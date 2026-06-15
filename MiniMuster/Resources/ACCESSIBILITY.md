@@ -57,7 +57,7 @@ With the features above enabled, you should be able to complete everyday tasks i
 
 If something is hard to use with accessibility features enabled, please contact us. We want to improve MiniMuster for everyone.
 
-**Email:** [jrozell@myocv.com](mailto:jrozell@myocv.com)
+**Email:** [jacob.rozell83@gmail.com](mailto:jacob.rozell83@gmail.com)
 
 ---
 

@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import TipKit
 
 @main
 struct MiniMusterApp: App {
@@ -18,6 +19,7 @@ struct MiniMusterApp: App {
         } else {
             container = AppContainer.make()
         }
+        configureTips()
     }
 
     var body: some Scene {
@@ -27,5 +29,19 @@ struct MiniMusterApp: App {
                 .environment(undo)
         }
         .modelContainer(container)
+    }
+
+    private func configureTips() {
+        do {
+            if AppInfo.isUITesting {
+                try Tips.resetDatastore()
+                try Tips.configure([.displayFrequency(.immediate)])
+                Tips.hideAllTipsForTesting()
+            } else {
+                try Tips.configure([.displayFrequency(.immediate)])
+            }
+        } catch {
+            // TipKit is best-effort; the app must still launch if configuration fails.
+        }
     }
 }

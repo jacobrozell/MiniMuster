@@ -60,7 +60,7 @@ We may update this policy from time to time. The **Effective date** at the top w
 
 Questions about this policy:
 
-**Email:** [jrozell@myocv.com](mailto:jrozell@myocv.com)
+**Email:** [jacob.rozell83@gmail.com](mailto:jacob.rozell83@gmail.com)
 
 ---
 

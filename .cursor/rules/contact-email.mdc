@@ -1,0 +1,26 @@
+---
+description: Use only the personal contact email in public-facing docs and app resources
+globs: docs/**,MiniMuster/Resources/**
+alwaysApply: false
+---
+
+# Contact email (public-facing)
+
+MiniMuster public contact info must use the **personal** email only.
+
+## Use
+
+- `jacob.rozell83@gmail.com`
+- `mailto:jacob.rozell83@gmail.com`
+
+## Never use
+
+- `jrozell@myocv.com` or any `@myocv.com` address
+- Any work or employer email in docs, HTML, or bundled markdown
+
+## Applies to
+
+- `docs/**` (GitHub Pages, App Store URLs)
+- `MiniMuster/Resources/**` (in-app Privacy & Accessibility)
+
+When adding or editing contact info, search the repo for `@myocv.com` and `mailto:` before finishing. Keep `docs/` and `MiniMuster/Resources/` in sync when both exist (e.g. `ACCESSIBILITY.md` ↔ `accessibility.html`).

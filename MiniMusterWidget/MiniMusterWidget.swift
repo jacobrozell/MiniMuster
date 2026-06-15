@@ -50,6 +50,7 @@ struct SprueCountWidgetView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .containerBackground(.fill.tertiary, for: .widget)
+        .widgetURL(AppDeepLink.collectionBacklogURL)
     }
 }
 

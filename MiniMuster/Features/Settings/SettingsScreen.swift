@@ -47,6 +47,9 @@ struct SettingsScreen: View {
                         Text(Bundle.main.appVersion)
                             .foregroundStyle(.secondary)
                     }
+                    Link(destination: AppInfo.buyMeACoffeeURL) {
+                        Label("Buy me a coffee", systemImage: "cup.and.saucer.fill")
+                    }
                     Text("For the Emperor · For the Great Horned Rat · Sigmar Watches")
                         .font(.caption).foregroundStyle(.secondary)
                 }

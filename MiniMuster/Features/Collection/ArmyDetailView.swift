@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import TipKit
 
 /// One army's units: native list with swipe actions and drill-down to unit detail.
 @MainActor
@@ -211,7 +212,8 @@ struct ArmyDetailView: View {
 
     @ViewBuilder
     private func unitsSection(army: Army) -> some View {
-        Section("Units") {
+        let showAdvanceTip = !isEditing && visibleUnits.contains { canAdvance($0) }
+        Section {
             if visibleUnits.isEmpty {
                 ContentUnavailableView {
                     Label("No units", systemImage: "figure.stand")
@@ -239,6 +241,9 @@ struct ArmyDetailView: View {
                     .listSidebarSelection(isSelected: unit.id == selectedUnitId, enabled: usesPadSidebarList)
                 }
             }
+        } header: {
+            Text("Units")
+                .popoverTip(showAdvanceTip ? SwipeAdvanceTip() : nil, arrowEdge: .top)
         }
     }
 
@@ -250,6 +255,7 @@ struct ArmyDetailView: View {
                     Button("Advance") {
                         ArmyStore.advance(unit, pipeline: pipeline, in: context)
                         advanceTrigger.toggle()
+                        SwipeAdvanceTip().invalidate(reason: .actionPerformed)
                     }
                     .tint(.accentColor)
                     .accessibilityLabel("Advance painting state")
@@ -269,6 +275,7 @@ struct ArmyDetailView: View {
                         Button("Advance", systemImage: "arrow.right.circle") {
                             ArmyStore.advance(unit, pipeline: pipeline, in: context)
                             advanceTrigger.toggle()
+                            SwipeAdvanceTip().invalidate(reason: .actionPerformed)
                         }
                     }
                     Button("Duplicate", systemImage: "plus.square.on.square") { duplicateUnit(unit) }

@@ -88,10 +88,12 @@ struct CollectionHomeView: View {
         .sensoryFeedback(.warning, trigger: deleteWarningTrigger)
         .onAppear {
             applyPendingSource()
+            applyPendingDeepLink()
             router.collectionSearch = search
         }
         .onChange(of: search) { router.collectionSearch = search }
         .onChange(of: router.pendingSourceFilter) { applyPendingSource() }
+        .onChange(of: router.pendingDeepLink) { applyPendingDeepLink() }
         .confirmationDialog(
             "Delete entire army \"\(armyToDelete?.name ?? "")\" and all its units?",
             isPresented: Binding(get: { armyToDelete != nil }, set: { if !$0 { armyToDelete = nil } }),
@@ -245,6 +247,18 @@ struct CollectionHomeView: View {
         cfg.factionFilter = "All"
         try? context.save()
         banner.show("Filtered by source: \(cfg.sourceFilter)")
+        filterTrigger.toggle()
+    }
+
+    private func applyPendingDeepLink() {
+        guard router.pendingDeepLink == .collectionBacklog else { return }
+        router.pendingDeepLink = nil
+        ArmyFilter.clearFilters(cfg)
+        cfg.quickViewRaw = "backlog"
+        search = ""
+        router.collectionSearch = ""
+        try? context.save()
+        banner.show("Showing backlog — models on the sprue")
         filterTrigger.toggle()
     }
 

@@ -50,6 +50,26 @@ struct AppRouterTests {
         #expect(router.pendingSourceFilter == "Combat Patrol")
         #expect(router.collectionSearch == "existing")
     }
+
+    @Test("open queues a deep link on the collection tab")
+    func openDeepLink() {
+        let router = AppRouter()
+        router.tab = .paints
+        router.open(.collectionBacklog)
+        #expect(router.tab == .armies)
+        #expect(router.pendingDeepLink == .collectionBacklog)
+    }
+}
+
+@Suite("AppDeepLink")
+struct AppDeepLinkTests {
+    @Test("parses collection backlog URLs")
+    func collectionBacklog() {
+        #expect(AppDeepLink.destination(from: AppDeepLink.collectionBacklogURL) == .collectionBacklog)
+        #expect(AppDeepLink.destination(from: URL(string: "minimuster://collection/backlog")!) == .collectionBacklog)
+        #expect(AppDeepLink.destination(from: URL(string: "https://example.com")!) == nil)
+        #expect(AppDeepLink.destination(from: URL(string: "minimuster://paints")!) == nil)
+    }
 }
 
 @Suite("AppInfo")

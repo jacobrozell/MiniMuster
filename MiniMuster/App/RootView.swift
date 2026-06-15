@@ -66,6 +66,11 @@ struct RootView: View {
         .onChange(of: armies.count) { checkOnboarding() }
         .onChange(of: paints.count) { checkOnboarding() }
         .onChange(of: widgetSignature) { refreshWidget() }
+        .onOpenURL { url in
+            if let destination = AppDeepLink.destination(from: url) {
+                router.open(destination)
+            }
+        }
         .fullScreenCover(isPresented: $showOnboarding) {
             OnboardingView { completeOnboarding($0) }
         }
