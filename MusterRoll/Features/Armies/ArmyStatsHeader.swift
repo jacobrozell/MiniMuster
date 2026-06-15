@@ -23,35 +23,17 @@ struct ArmyStatsHeader: View {
 
     private func label(_ base: String) -> String { scoped ? "\(base) (filtered)" : base }
 
-    private var basedStage: PipelineStage? {
-        pipeline.first { $0.key == "Based" }
-            ?? (pipeline.count >= 2 ? pipeline[pipeline.count - 2] : nil)
-    }
-
-    private var doneStage: PipelineStage? {
-        pipeline.first { $0.key == "Done" } ?? pipeline.last
-    }
-
     var body: some View {
-        let u = units
-        let models = u.reduce(0) { $0 + $1.modelCount }
-        let basedKey = basedStage?.key
-        let doneKey = doneStage?.key
-        let based = basedKey.map { key in u.filter { $0.state == key }.count } ?? 0
-        let done = doneKey.map { key in u.filter { $0.state == key }.count } ?? 0
-        let first = pipeline.first?.key
-        let wip = u.filter { !Pipeline.doneStates.contains($0.state) && $0.state != first }.count
-        let todo = u.filter { $0.state == first }.count
-        let overall = Int((Pipeline.progress(of: u, pipeline) * 100).rounded())
+        let stats = CollectionStats.snapshot(units: units, pipeline: pipeline)
 
         VStack(spacing: 12) {
             LazyVGrid(columns: statColumns, spacing: 8) {
-                StatTile(value: u.count, label: label("Unit Entries"))
-                StatTile(value: models, label: label("Models (est.)"), accent: true)
-                StatTile(value: based, label: label(basedStage?.key ?? "Based"))
-                StatTile(value: done, label: label(doneStage?.key ?? "Done"))
-                StatTile(value: wip, label: "In Progress")
-                StatTile(value: todo, label: "On the Sprue")
+                StatTile(value: stats.unitEntries, label: label("Unit Entries"))
+                StatTile(value: stats.models, label: label("Models (est.)"), accent: true)
+                StatTile(value: stats.based, label: label(CollectionStats.basedStage(in: pipeline)?.key ?? "Based"))
+                StatTile(value: stats.done, label: label(CollectionStats.doneStage(in: pipeline)?.key ?? "Done"))
+                StatTile(value: stats.wip, label: "In Progress")
+                StatTile(value: stats.todo, label: "On the Sprue")
                 StatTile(value: armyCount, label: label("Armies"))
             }
 
@@ -63,16 +45,16 @@ struct ArmyStatsHeader: View {
                         .lineLimit(2)
                         .fixedSize(horizontal: false, vertical: true)
                     Spacer(minLength: 8)
-                    Text("\(overall)%")
+                    Text("\(stats.overallPercent)%")
                         .font(.caption.weight(.semibold))
                         .monospacedDigit()
                         .fixedSize()
                 }
-                ProgressMeter(segments: Pipeline.segments(of: u, pipeline))
-                ProgressLegend(segments: Pipeline.segments(of: u, pipeline))
+                ProgressMeter(segments: stats.segments)
+                ProgressLegend(segments: stats.segments)
             }
             .accessibilityElement(children: .combine)
-            .accessibilityLabel("Collection progress \(overall) percent")
+            .accessibilityLabel("Collection progress \(stats.overallPercent) percent")
         }
     }
 }

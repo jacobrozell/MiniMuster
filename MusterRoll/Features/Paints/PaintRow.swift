@@ -1,19 +1,15 @@
 import SwiftUI
-#if canImport(UIKit)
-import UIKit
-#endif
 
 /// Read-only paint row for list layout.
 struct PaintRow: View {
     let paint: Paint
     let linkedCount: Int
 
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     private var usesStackedLayout: Bool {
-#if canImport(UIKit)
-        UIDevice.current.userInterfaceIdiom == .pad
-#else
-        false
-#endif
+        dynamicTypeSize.isAccessibilitySize || horizontalSizeClass == .regular
     }
 
     var body: some View {

@@ -1,22 +1,22 @@
 import SwiftUI
 import SwiftData
-#if canImport(UIKit)
-import UIKit
-#endif
 
 /// Collection tab with adaptive split view (iPad) and navigation stack (iPhone).
 struct CollectionTab: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     @State private var selectedArmyId: UUID?
     @State private var selectedUnitId: UUID?
     @State private var compactPath = NavigationPath()
     @State private var detailPath = NavigationPath()
 
     private var usesSplitLayout: Bool {
-#if canImport(UIKit)
-        UIDevice.current.userInterfaceIdiom == .pad
-#else
-        false
-#endif
+        AdaptiveLayout.usesSplitNavigation(horizontalSizeClass)
+    }
+
+    private var sidebarWidth: (min: CGFloat, ideal: CGFloat, max: CGFloat) {
+        AdaptiveLayout.splitColumnWidth(dynamicType: dynamicTypeSize)
     }
 
     var body: some View {
@@ -50,7 +50,7 @@ struct CollectionTab: View {
                     }
                 }
             }
-            .navigationSplitViewColumnWidth(min: 320, ideal: 380, max: 440)
+            .navigationSplitViewColumnWidth(min: sidebarWidth.min, ideal: sidebarWidth.ideal, max: sidebarWidth.max)
         } detail: {
             NavigationStack(path: $detailPath) {
                 Group {

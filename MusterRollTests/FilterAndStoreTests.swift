@@ -199,6 +199,28 @@ struct ArmyFilterTests {
         // Progress sort is ascending — lower-progress armies appear first.
         #expect(names.last == "GK")
     }
+
+    @Test("faction filter narrows visible armies")
+    func factionFilter() {
+        let db = seededDatabase()
+        let ctx = db.context
+        let cfg = Config.current(ctx)
+        cfg.factionFilter = "Skaven"
+        let vis = ArmyFilter.build(armies: armies(ctx), cfg: cfg, search: "", global: nil)
+        #expect(vis.count == 1)
+        #expect(vis.first?.army.name == "Vermindoom")
+    }
+
+    @Test("backlog quick view keeps unassembled units")
+    func quickViewBacklog() {
+        let db = seededDatabase()
+        let ctx = db.context
+        let cfg = Config.current(ctx)
+        cfg.quickViewRaw = "backlog"
+        let names = ArmyFilter.build(armies: armies(ctx), cfg: cfg, search: "", global: nil)
+            .flatMap { $0.units.map(\.name) }
+        #expect(names == ["Rat Ogors"])
+    }
 }
 
 @Suite("SquadStore", .serialized)

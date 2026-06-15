@@ -6,7 +6,17 @@ struct PaintGridView: View {
     let linkedCount: (Paint) -> Int
     let onSelect: (Paint) -> Void
 
-    private let columns = [GridItem(.adaptive(minimum: 140), spacing: 12)]
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    private var columns: [GridItem] {
+        if dynamicTypeSize >= .accessibility3 {
+            [GridItem(.flexible())]
+        } else if dynamicTypeSize.isAccessibilitySize {
+            [GridItem(.adaptive(minimum: 180), spacing: 12)]
+        } else {
+            [GridItem(.adaptive(minimum: 140), spacing: 12)]
+        }
+    }
 
     var body: some View {
         LazyVGrid(columns: columns, spacing: 12) {

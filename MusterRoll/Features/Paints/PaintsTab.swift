@@ -1,18 +1,18 @@
 import SwiftUI
-#if canImport(UIKit)
-import UIKit
-#endif
 
 struct PaintsTab: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     @State private var selectedPaintId: UUID?
     @State private var compactPath = NavigationPath()
 
     private var usesSplitLayout: Bool {
-#if canImport(UIKit)
-        UIDevice.current.userInterfaceIdiom == .pad
-#else
-        false
-#endif
+        AdaptiveLayout.usesSplitNavigation(horizontalSizeClass)
+    }
+
+    private var sidebarWidth: (min: CGFloat, ideal: CGFloat, max: CGFloat) {
+        AdaptiveLayout.splitColumnWidth(dynamicType: dynamicTypeSize)
     }
 
     var body: some View {
@@ -28,7 +28,7 @@ struct PaintsTab: View {
     private var splitView: some View {
         NavigationSplitView {
             PaintListView(selectedPaintId: $selectedPaintId)
-                .navigationSplitViewColumnWidth(min: 320, ideal: 380, max: 440)
+                .navigationSplitViewColumnWidth(min: sidebarWidth.min, ideal: sidebarWidth.ideal, max: sidebarWidth.max)
         } detail: {
             if let id = selectedPaintId {
                 PaintDetailView(paintId: id)

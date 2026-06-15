@@ -1,7 +1,4 @@
 import SwiftUI
-#if canImport(UIKit)
-import UIKit
-#endif
 
 /// Browse row for one army in the collection list.
 struct ArmyRow: View {
@@ -11,16 +8,16 @@ struct ArmyRow: View {
     let percentComplete: Int
     let scoped: Bool
 
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     private var presentation: (crest: String, colorHex: String) {
         army.presentation(overrides: overrides)
     }
 
+    /// Stack crest/progress above text when the sidebar is narrow or text is large.
     private var usesStackedLayout: Bool {
-#if canImport(UIKit)
-        UIDevice.current.userInterfaceIdiom == .pad
-#else
-        false
-#endif
+        dynamicTypeSize.isAccessibilitySize || horizontalSizeClass == .regular
     }
 
     var body: some View {
@@ -65,9 +62,27 @@ struct ArmyRow: View {
         VStack(alignment: .leading, spacing: 2) {
             Text(army.name)
                 .font(.headline)
-                .lineLimit(2)
-                .truncationMode(.tail)
+                .lineLimit(dynamicTypeSize.isAccessibilitySize ? 3 : 2)
                 .fixedSize(horizontal: false, vertical: true)
+            metadataBlock
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    @ViewBuilder
+    private var metadataBlock: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("\(army.game) · \(army.faction)")
+                Text(countLabel)
+                if army.customPipeline?.isEmpty == false {
+                    Text("custom pipeline")
+                }
+            }
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+        } else {
             Text(subtitle)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
@@ -75,11 +90,13 @@ struct ArmyRow: View {
                 .truncationMode(.tail)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var countLabel: String {
+        scoped ? "\(visibleUnitCount) visible" : "\(visibleUnitCount) units"
     }
 
     private var subtitle: String {
-        let countLabel = scoped ? "\(visibleUnitCount) visible" : "\(visibleUnitCount) units"
         var parts = [army.game, army.faction, countLabel]
         if army.customPipeline?.isEmpty == false { parts.append("custom pipeline") }
         return parts.joined(separator: " · ")

@@ -1,4 +1,6 @@
 import Testing
+import SwiftData
+import SwiftUI
 @testable import MusterRoll
 
 @Suite("Tags")
@@ -122,5 +124,35 @@ struct FactionCatalogueTests {
                 #expect(seen.insert(key).inserted, "duplicate composite key: \(key)")
             }
         }
+    }
+}
+
+@Suite("Color hex parsing")
+struct ColorHexTests {
+    @Test("parses shorthand and full hex strings")
+    func initHex() {
+        #expect(Color(hex: "#abc").hexString.lowercased() == "#aabbcc")
+        #expect(Color(hex: "#112233").hexString.lowercased() == "#112233")
+        #expect(Color(hex: "javascript:alert(1)").hexString.lowercased() == "#888888")
+    }
+}
+
+@Suite("ThemePreference")
+struct ThemePreferenceTests {
+    @Test("cycles dark → light → system")
+    func cycle() {
+        #expect(ThemePreference.dark.next == .light)
+        #expect(ThemePreference.light.next == .system)
+        #expect(ThemePreference.system.next == .dark)
+    }
+
+    @Test("AppConfiguration theme round-trips")
+    @MainActor
+    func configTheme() {
+        let db = TestDatabase()
+        let cfg = Config.current(db.context)
+        cfg.theme = .dark
+        #expect(cfg.themeRaw == ThemePreference.dark.rawValue)
+        #expect(cfg.theme == .dark)
     }
 }

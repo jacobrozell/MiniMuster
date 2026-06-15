@@ -1,12 +1,10 @@
 import SwiftUI
 import SwiftData
-#if canImport(UIKit)
-import UIKit
-#endif
 
 /// One army's units: native list with swipe actions and drill-down to unit detail.
 @MainActor
 struct ArmyDetailView: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.modelContext) private var context
     @Environment(AppRouter.self) private var router
     @Environment(BannerCenter.self) private var banner
@@ -65,11 +63,7 @@ struct ArmyDetailView: View {
     }
 
     private var armyTitleDisplayMode: NavigationBarItem.TitleDisplayMode {
-#if canImport(UIKit)
-        UIDevice.current.userInterfaceIdiom == .pad ? .inline : .large
-#else
-        .large
-#endif
+        horizontalSizeClass == .regular ? .inline : .large
     }
 
     var body: some View {

@@ -108,4 +108,31 @@ struct PipelineTests {
         #expect(segs.map(\.key) == ["Primed", "Done"])
         #expect(segs.first { $0.key == "Done" }?.pct == (1.0 / 3.0) * 100)
     }
+
+    @Test("resolve falls back to default and sanitizes custom stages")
+    func resolve() {
+        #expect(Pipeline.resolve(nil).map(\.key) == DefaultPipeline.stages.map(\.key))
+        #expect(Pipeline.resolve([]).map(\.key) == DefaultPipeline.stages.map(\.key))
+        let custom = [PipelineStage(key: "A", hex: "bad"), PipelineStage(key: "B", hex: "#112233")]
+        let resolved = Pipeline.resolve(custom)
+        #expect(resolved.map(\.key) == ["A", "B"])
+        #expect(resolved[0].hex == "#888")
+        #expect(resolved[1].hex == "#112233")
+    }
+
+    @Test("forArmy prefers army custom pipeline over global")
+    func forArmy() {
+        let army = Army(name: "A", game: "40k", faction: "Orks")
+        army.customPipeline = [PipelineStage(key: "Custom", hex: "#111111")]
+        #expect(Pipeline.forArmy(army, global: DefaultPipeline.stages).map(\.key) == ["Custom"])
+        army.customPipeline = nil
+        #expect(Pipeline.forArmy(army, global: DefaultPipeline.stages).first?.key == "Unassembled")
+    }
+
+    @Test("doneStates identifies table-ready stages")
+    func doneStates() {
+        #expect(Pipeline.doneStates.contains("Done"))
+        #expect(Pipeline.doneStates.contains("Based"))
+        #expect(!Pipeline.doneStates.contains("Primed"))
+    }
 }

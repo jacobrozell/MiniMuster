@@ -32,15 +32,16 @@ final class MusterRollUITests: XCTestCase {
     }
 
     private func tapTab(_ app: XCUIApplication, id: String) {
-        let tab = app.buttons[id]
-        if tab.waitForExistence(timeout: 3) {
-            tab.tap()
+        let tabs = app.buttons.matching(identifier: id)
+        if tabs.firstMatch.waitForExistence(timeout: 3) {
+            tabs.firstMatch.tap()
             return
         }
         // Floating tab bar fallback (label-based)
         let label = id == "tabPaints" ? "Paints" : "Collection"
-        XCTAssertTrue(app.buttons[label].waitForExistence(timeout: 3))
-        app.buttons[label].tap()
+        let labeled = app.buttons.matching(NSPredicate(format: "label == %@", label))
+        XCTAssertTrue(labeled.firstMatch.waitForExistence(timeout: 3))
+        labeled.firstMatch.tap()
     }
 
     func testLaunchShowsOnboardingThenCollection() throws {

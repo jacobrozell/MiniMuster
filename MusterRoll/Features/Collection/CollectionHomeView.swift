@@ -1,12 +1,10 @@
 import SwiftUI
 import SwiftData
-#if canImport(UIKit)
-import UIKit
-#endif
 
 /// Browse all armies; search and filter without inline unit editing.
 @MainActor
 struct CollectionHomeView: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.modelContext) private var context
     @Environment(BannerCenter.self) private var banner
     @Environment(UndoService.self) private var undo
@@ -43,11 +41,7 @@ struct CollectionHomeView: View {
     }
 
     private var usesPadSidebarList: Bool {
-#if canImport(UIKit)
-        UIDevice.current.userInterfaceIdiom == .pad
-#else
-        false
-#endif
+        AdaptiveLayout.usesSidebarListStyle(horizontalSizeClass)
     }
 
     var body: some View {

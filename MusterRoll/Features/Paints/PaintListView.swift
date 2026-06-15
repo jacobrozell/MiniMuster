@@ -1,12 +1,10 @@
 import SwiftUI
 import SwiftData
-#if canImport(UIKit)
-import UIKit
-#endif
 
 @MainActor
 struct PaintListView: View {
     @Environment(\.modelContext) private var context
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(BannerCenter.self) private var banner
     @Environment(AppRouter.self) private var router
     @Query(sort: \Paint.name) private var paints: [Paint]
@@ -35,33 +33,19 @@ struct PaintListView: View {
     private var brands: [String] { Array(Set(paints.map(\.brand).filter { !$0.isEmpty })).sorted() }
 
     private var filtersActive: Bool {
-        cfg.paintTypeFilter != "All" || cfg.paintBrandFilter != "All" || cfg.paintLowOnly
+        PaintFilter.isActive(cfg, search: search)
     }
 
     private var filterCount: Int {
-        var count = 0
-        if cfg.paintTypeFilter != "All" { count += 1 }
-        if cfg.paintBrandFilter != "All" { count += 1 }
-        if cfg.paintLowOnly { count += 1 }
-        return count
+        PaintFilter.activeFilterCount(cfg)
     }
 
     private var filtered: [Paint] {
-        let q = search.lowercased()
-        return paints.filter { p in
-            (!cfg.paintLowOnly || p.low)
-            && (cfg.paintTypeFilter == "All" || p.type == cfg.paintTypeFilter)
-            && (cfg.paintBrandFilter == "All" || p.brand == cfg.paintBrandFilter)
-            && (q.isEmpty || "\(p.name) \(p.type) \(p.brand) \(p.source) \(p.notes)".lowercased().contains(q))
-        }
+        PaintFilter.filter(paints, cfg: cfg, search: search)
     }
 
     private var usesPadSidebarList: Bool {
-#if canImport(UIKit)
-        UIDevice.current.userInterfaceIdiom == .pad
-#else
-        false
-#endif
+        AdaptiveLayout.usesSidebarListStyle(horizontalSizeClass)
     }
 
     var body: some View {

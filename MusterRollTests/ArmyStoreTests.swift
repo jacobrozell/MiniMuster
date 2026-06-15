@@ -274,4 +274,42 @@ struct ArmyStoreTests {
         #expect(customUnit.state == "B")
         #expect(stdUnit.state == "Base Coated")
     }
+
+    @Test("advance single unit is a no-op when already done")
+    func advanceSingleDone() {
+        let db = newDatabase()
+        let ctx = db.context
+        let army = Army(name: "A", game: "40k", faction: "Orks"); ctx.insert(army)
+        let u = Unit(name: "Hero", qty: 1, state: "Done", order: 0); u.army = army; ctx.insert(u)
+        ArmyStore.advance(u, pipeline: DefaultPipeline.stages, in: ctx)
+        #expect(u.state == "Done")
+    }
+
+    @Test("move renumbers destination army orders")
+    func moveRenumbers() {
+        let db = newDatabase()
+        let ctx = db.context
+        let a = Army(name: "A", game: "40k", faction: "Orks"); ctx.insert(a)
+        let b = Army(name: "B", game: "40k", faction: "Orks"); ctx.insert(b)
+        let u0 = Unit(name: "U0", state: "Primed", order: 0); u0.army = b; ctx.insert(u0)
+        let u1 = Unit(name: "U1", state: "Primed", order: 0); u1.army = a; ctx.insert(u1)
+        #expect(ArmyStore.move(u1, to: b, in: ctx))
+        #expect(b.orderedUnits.map(\.name) == ["U0", "U1"])
+        #expect(b.orderedUnits.map(\.order) == [0, 1])
+    }
+
+    @Test("mergeDuplicates adopts notes from removed rows")
+    func mergeNotes() {
+        let db = newDatabase()
+        let ctx = db.context
+        let army = Army(name: "A", game: "40k", faction: "Orks"); ctx.insert(army)
+        for (i, notes) in ["", "#wip"].enumerated() {
+            let u = Unit(name: "Boyz (10)", qty: 1, source: "Box", state: "Primed", notes: notes, order: i)
+            u.army = army; ctx.insert(u)
+        }
+        #expect(ArmyStore.mergeDuplicates(in: army, ctx: ctx) == 1)
+        #expect(army.units.count == 1)
+        #expect(army.units.first?.qty == 2)
+        #expect(army.units.first?.notes == "#wip")
+    }
 }

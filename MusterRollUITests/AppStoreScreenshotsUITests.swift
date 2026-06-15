@@ -70,6 +70,12 @@ final class AppStoreScreenshotsUITests: XCTestCase {
         fallback.tap()
     }
 
+    private func scrollToReveal(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 6) {
+        for _ in 0..<maxSwipes where !element.waitForExistence(timeout: 1) || !element.isHittable {
+            app.swipeUp()
+        }
+    }
+
     private func openUnit(named name: String, in app: XCUIApplication) {
         let id = "unit-\(name)"
         for query in [app.buttons, app.otherElements] {
@@ -158,6 +164,10 @@ final class AppStoreScreenshotsUITests: XCTestCase {
         dismissSettings(app)
 
         openArmy(named: "Hallowed Knights", in: app)
+        let lordVigilant = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "label CONTAINS[c] %@", "Lord-Vigilant"))
+            .firstMatch
+        scrollToReveal(lordVigilant, in: app)
         XCTAssertTrue(waitForLabel("Lord-Vigilant", in: app, timeout: 15))
         try saveScreenshot(app, name: "03-army-units")
 

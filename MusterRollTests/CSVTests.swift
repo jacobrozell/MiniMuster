@@ -78,6 +78,50 @@ struct CSVSchemaTests {
         #expect(CSVSchema.filename(.armies) == "warhammer_armies.csv")
         #expect(CSVSchema.filename(.paints) == "warhammer_paint_inventory.csv")
     }
+
+    @Test("templates include required import columns")
+    func requiredColumns() {
+        let armyRows = CSV.parse(CSVSchema.template(.armies))
+        let armyMap = HeaderMap(rows: armyRows, required: CSVSchema.armyRequired)
+        #expect(armyMap.ok)
+
+        let paintRows = CSV.parse(CSVSchema.template(.paints))
+        let paintMap = HeaderMap(rows: paintRows, required: CSVSchema.paintRequired)
+        #expect(paintMap.ok)
+    }
+
+    @Test("templates parse as header plus one example row")
+    func rowCount() {
+        #expect(CSV.parse(CSVSchema.template(.armies)).count == 2)
+        #expect(CSV.parse(CSVSchema.template(.paints)).count == 2)
+    }
+
+    @Test("templates are auto-detected by domain")
+    func detectTemplates() {
+        #expect(CSVSchema.detect(CSV.parse(CSVSchema.template(.armies))) == .armies)
+        #expect(CSVSchema.detect(CSV.parse(CSVSchema.template(.paints))) == .paints)
+    }
+
+    @Test("armies template example row imports successfully")
+    func armiesTemplateImports() {
+        let rows = CSV.parse(CSVSchema.template(.armies))
+        let result = ArmyCSV.import(rows, pipeline: DefaultPipeline.stages, overrides: [])
+        #expect(result.ok)
+        #expect(result.stats["armies"] == 1)
+        #expect(result.stats["units"] == 1)
+        #expect(result.armies?.first?.name == "My Chapter")
+        #expect(result.armies?.first?.units.first?.name == "Intercessors (5)")
+    }
+
+    @Test("paints template example row imports successfully")
+    func paintsTemplateImports() {
+        let rows = CSV.parse(CSVSchema.template(.paints))
+        let result = PaintCSV.import(rows)
+        #expect(result.ok)
+        #expect(result.stats["paints"] == 1)
+        #expect(result.paints?.first?.name == "Macragge Blue")
+        #expect(result.paints?.first?.type == "Base")
+    }
 }
 
 @Suite("HeaderMap")
