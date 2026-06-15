@@ -38,6 +38,13 @@ struct SettingsDataSection: View {
                 }
             }
 
+            Section("CSV templates") {
+                Button("Armies template") { exportArmiesTemplate() }
+                Button("Paints template") { exportPaintsTemplate() }
+            } footer: {
+                Text("Download a starter CSV with the correct columns and an example row.")
+            }
+
             Section("Import") {
                 Button("Import armies (replace)…") {
                     importDomain = .armies; importMode = .replace; showCSVImporter = true
@@ -162,6 +169,18 @@ struct SettingsDataSection: View {
     private func showFailure(title: String, message: String) {
         importErrorTrigger.toggle()
         alertError = (title, message)
+    }
+
+    private func exportArmiesTemplate() {
+        let out = DataActions.armiesTemplateCSV()
+        exportDoc = TextFileDocument(text: out.text, contentType: .commaSeparatedText)
+        exportName = out.filename; exportType = .commaSeparatedText; showExporter = true
+    }
+
+    private func exportPaintsTemplate() {
+        let out = DataActions.paintsTemplateCSV()
+        exportDoc = TextFileDocument(text: out.text, contentType: .commaSeparatedText)
+        exportName = out.filename; exportType = .commaSeparatedText; showExporter = true
     }
 
     private func exportArmiesCSV() {

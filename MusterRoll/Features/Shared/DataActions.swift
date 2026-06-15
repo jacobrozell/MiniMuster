@@ -206,4 +206,12 @@ enum DataActions {
         try? ctx.save()
         return (json, "minimuster-backup-\(Date().fileStamp).json")
     }
+
+    static func armiesTemplateCSV() -> (text: String, filename: String) {
+        (CSVSchema.template(.armies), CSVSchema.filename(.armies))
+    }
+
+    static func paintsTemplateCSV() -> (text: String, filename: String) {
+        (CSVSchema.template(.paints), CSVSchema.filename(.paints))
+    }
 }
