@@ -168,8 +168,10 @@ struct UnitDetailView: View {
             Menu {
                 Button("Duplicate", systemImage: "plus.square.on.square") {
                     if let unit {
-                        ArmyStore.duplicate(unit, in: context)
-                        duplicateTrigger.toggle()
+                        if ArmyStore.duplicate(unit, in: context) != nil {
+                            banner.show("Duplicated \(unit.name)")
+                            duplicateTrigger.toggle()
+                        }
                     }
                 }
                 Button("Move to…", systemImage: "arrow.right.arrow.left") { showMove = true }

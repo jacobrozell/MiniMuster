@@ -91,8 +91,9 @@ enum ArmyStore {
     }
 
     /// Deep-copy a unit (including members) immediately after it (mirrors `duplicateUnit`).
-    static func duplicate(_ unit: Unit, in ctx: ModelContext) {
-        guard let army = unit.army else { return }
+    @discardableResult
+    static func duplicate(_ unit: Unit, in ctx: ModelContext) -> Unit? {
+        guard let army = unit.army else { return nil }
         let copy = Unit(name: unit.name, qty: unit.qty, source: unit.source,
                         state: unit.state, notes: unit.notes, spearhead: unit.spearhead,
                         order: unit.order + 1)
@@ -107,6 +108,7 @@ enum ArmyStore {
         for u in army.units where u !== copy && u.order > unit.order { u.order += 1 }
         renumber(army)
         try? ctx.save()
+        return copy
     }
 
     /// Move a unit to another army (mirrors `moveUnit`).

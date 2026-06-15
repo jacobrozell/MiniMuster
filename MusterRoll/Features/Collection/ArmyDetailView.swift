@@ -1,5 +1,8 @@
 import SwiftUI
 import SwiftData
+#if canImport(UIKit)
+import UIKit
+#endif
 
 /// One army's units: native list with swipe actions and drill-down to unit detail.
 @MainActor
@@ -11,8 +14,11 @@ struct ArmyDetailView: View {
     @Query private var allArmies: [Army]
 
     let armyId: UUID
+    @Binding var selectedArmyId: UUID?
     @Binding var selectedUnitId: UUID?
     var onSelectUnit: (UUID) -> Void = { _ in }
+
+    @Environment(\.dismiss) private var dismiss
 
     @State private var showAddUnit = false
     @State private var showRename = false
@@ -58,13 +64,21 @@ struct ArmyDetailView: View {
         return allArmies.map(\.name).filter { $0 != army.name }
     }
 
+    private var armyTitleDisplayMode: NavigationBarItem.TitleDisplayMode {
+#if canImport(UIKit)
+        UIDevice.current.userInterfaceIdiom == .pad ? .inline : .large
+#else
+        .large
+#endif
+    }
+
     var body: some View {
         Group {
             if let army { unitList(army: army) }
             else { ContentUnavailableView("Army not found", systemImage: "shield") }
         }
         .navigationTitle(army?.name ?? "Army")
-        .navigationBarTitleDisplayMode(.large)
+        .navigationBarTitleDisplayMode(armyTitleDisplayMode)
         .toolbar { armyToolbar }
         .safeAreaInset(edge: .bottom) { batchActionBar }
         .sheet(isPresented: $showAddUnit) {
@@ -78,7 +92,7 @@ struct ArmyDetailView: View {
         .sheet(isPresented: $showRename) {
             if let army {
                 RenameArmySheet(current: army.name) { ArmyStore.rename(army, to: $0, in: context) }
-                    .presentationDetents([.height(200)])
+                    .presentationDetents([.medium])
             }
         }
         .sheet(isPresented: $showPipeline) {
@@ -101,7 +115,11 @@ struct ArmyDetailView: View {
         .confirmationDialog("Delete entire army \"\(army?.name ?? "")\" and all its units?",
                             isPresented: $confirmDeleteArmy, titleVisibility: .visible) {
             Button("Delete", role: .destructive) {
-                if let army { ArmyStore.delete(army, in: context) }
+                if let army {
+                    if army.id == selectedArmyId { selectedArmyId = nil }
+                    ArmyStore.delete(army, in: context)
+                    dismiss()
+                }
             }
         }
         .confirmationDialog("Remove \"\(unitToDelete?.name ?? "")\"?",
@@ -235,10 +253,7 @@ struct ArmyDetailView: View {
             }
             .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                 if !isEditing {
-                    Button("Duplicate") {
-                        ArmyStore.duplicate(unit, in: context)
-                        duplicateTrigger.toggle()
-                    }
+                    Button("Duplicate") { duplicateUnit(unit) }
                     .accessibilityLabel("Duplicate unit")
                     Button("Delete", role: .destructive) { unitToDelete = unit }
                         .accessibilityLabel("Delete unit")
@@ -252,10 +267,7 @@ struct ArmyDetailView: View {
                             advanceTrigger.toggle()
                         }
                     }
-                    Button("Duplicate", systemImage: "plus.square.on.square") {
-                        ArmyStore.duplicate(unit, in: context)
-                        duplicateTrigger.toggle()
-                    }
+                    Button("Duplicate", systemImage: "plus.square.on.square") { duplicateUnit(unit) }
                     if !otherArmyNames.isEmpty {
                         Button("Move to…", systemImage: "arrow.right.arrow.left") {
                             unitToMove = unit
@@ -347,4 +359,12 @@ struct ArmyDetailView: View {
     }
 
     private func canAdvance(_ unit: Unit) -> Bool { Pipeline.canAdvance(unit, pipeline) }
+
+    private func duplicateUnit(_ unit: Unit) {
+        guard let copy = ArmyStore.duplicate(unit, in: context) else { return }
+        banner.show("Duplicated \(unit.name)")
+        duplicateTrigger.toggle()
+        selectedUnitId = copy.id
+        onSelectUnit(copy.id)
+    }
 }
