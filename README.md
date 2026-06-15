@@ -16,7 +16,7 @@ Specs: [`docs/ios-native/`](../docs/ios-native/) (UI/UX) · [`docs/ios-spec/`](.
 brew install xcodegen
 cd ios
 xcodegen generate
-open MusterRoll.xcodeproj
+open MiniMuster.xcodeproj
 ```
 
 The `.xcodeproj` is generated locally and not committed.
@@ -43,14 +43,14 @@ Individual suites:
 
 ```bash
 # Unit tests
-xcodebuild test -project MusterRoll.xcodeproj -scheme MusterRoll \
+xcodebuild test -project MiniMuster.xcodeproj -scheme MiniMuster \
   -destination 'platform=iOS Simulator,name=iPhone 17' \
-  -only-testing:MusterRollTests -parallel-testing-enabled NO
+  -only-testing:MiniMusterTests -parallel-testing-enabled NO
 
 # UI smoke tests
-xcodebuild test -project MusterRoll.xcodeproj -scheme MusterRoll \
+xcodebuild test -project MiniMuster.xcodeproj -scheme MiniMuster \
   -destination 'platform=iOS Simulator,name=iPhone 17' \
-  -only-testing:MusterRollUITests -parallel-testing-enabled NO
+  -only-testing:MiniMusterUITests -parallel-testing-enabled NO
 ```
 
 CI runs the full coverage script on `macos-15` with the iPhone 17 simulator and uploads the summary as a workflow artifact (see `.github/workflows/ios.yml`).
@@ -58,7 +58,7 @@ CI runs the full coverage script on `macos-15` with the iPhone 17 simulator and 
 ## App structure
 
 ```
-MusterRoll/
+MiniMuster/
   App/              RootView, AppRouter, AppContainer
   Models/           SwiftData models
   Domain/           Pipeline, filters, factions (pure Swift)
@@ -70,9 +70,9 @@ MusterRoll/
   DesignSystem/     ProgressRing, StateChip, components
   Widget/           App Group snapshot for home-screen widget
   Support/          BannerCenter, UndoService
-MusterRollWidget/   “On the sprue” widget extension
-MusterRollTests/    Swift Testing (domain + stores + I/O)
-MusterRollUITests/  Launch, sample data, tab navigation smoke tests
+MiniMusterWidget/   “On the sprue” widget extension
+MiniMusterTests/    Swift Testing (domain + stores + I/O)
+MiniMusterUITests/  Launch, sample data, tab navigation smoke tests
 ```
 
 ## Features (v1.0)

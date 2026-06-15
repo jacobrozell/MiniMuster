@@ -1,4 +1,4 @@
-name: MusterRoll
+name: MiniMuster
 options:
   bundleIdPrefix: com.jacobrozell
   deploymentTarget:
@@ -19,57 +19,56 @@ settings:
     SWIFT_EMIT_LOC_STRINGS: YES
 
 targets:
-  MusterRoll:
+  MiniMuster:
     type: application
     platform: iOS
     deploymentTarget: "18.0"
     sources:
-      - path: MusterRoll
+      - path: MiniMuster
     entitlements:
-      path: MusterRoll/MusterRoll.entitlements
+      path: MiniMuster/MiniMuster.entitlements
       properties:
         com.apple.security.application-groups:
           - group.com.jacobrozell.minimuster
     info:
-      path: MusterRoll/Info.plist
+      path: MiniMuster/Info.plist
       properties:
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
-        UILaunchScreen:
-          UIImageName: CrestLogo
-          UIColorName: LaunchBackground
-          UIImageRespectsSafeAreaInsets: true
+        UILaunchStoryboardName: LaunchScreen
     dependencies:
-      - target: MusterRollWidget
+      - target: MiniMusterWidget
         embed: true
     settings:
       base:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.minimuster
+        PRODUCT_NAME: MiniMuster
         INFOPLIST_KEY_CFBundleDisplayName: MiniMuster
         INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
         INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
         TARGETED_DEVICE_FAMILY: "1,2"
 
-  MusterRollWidget:
+  MiniMusterWidget:
     type: app-extension
     platform: iOS
     deploymentTarget: "18.0"
     sources:
-      - path: MusterRollWidget
+      - path: MiniMusterWidget
         excludes:
           - Info.plist
-      - path: MusterRoll/Widget
+      - path: MiniMuster/Widget
         includes:
           - WidgetDataStore.swift
     entitlements:
-      path: MusterRollWidget/MusterRollWidget.entitlements
+      path: MiniMusterWidget/MiniMusterWidget.entitlements
       properties:
         com.apple.security.application-groups:
           - group.com.jacobrozell.minimuster
     info:
-      path: MusterRollWidget/Info.plist
+      path: MiniMusterWidget/Info.plist
       properties:
         CFBundleDisplayName: MiniMuster
         NSExtension:
@@ -77,47 +76,48 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.minimuster.widget
+        PRODUCT_NAME: MiniMusterWidget
         SKIP_INSTALL: YES
         TARGETED_DEVICE_FAMILY: "1,2"
 
-  MusterRollTests:
+  MiniMusterTests:
     type: bundle.unit-test
     platform: iOS
     deploymentTarget: "18.0"
     sources:
-      - path: MusterRollTests
+      - path: MiniMusterTests
     dependencies:
-      - target: MusterRoll
+      - target: MiniMuster
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.minimuster.tests
 
-  MusterRollUITests:
+  MiniMusterUITests:
     type: bundle.ui-testing
     platform: iOS
     deploymentTarget: "18.0"
     sources:
-      - path: MusterRollUITests
+      - path: MiniMusterUITests
     dependencies:
-      - target: MusterRoll
+      - target: MiniMuster
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.minimuster.uitests
-        TEST_TARGET_NAME: MusterRoll
+        TEST_TARGET_NAME: MiniMuster
 
 schemes:
-  MusterRoll:
+  MiniMuster:
     build:
       targets:
-        MusterRoll: all
-        MusterRollTests: [test]
-        MusterRollUITests: [test]
-        MusterRollWidget: all
+        MiniMuster: all
+        MiniMusterTests: [test]
+        MiniMusterUITests: [test]
+        MiniMusterWidget: all
     test:
       gatherCoverageData: true
       coverageTargets:
-        - MusterRoll
-        - MusterRollWidget
+        - MiniMuster
+        - MiniMusterWidget
       targets:
-        - MusterRollTests
-        - MusterRollUITests
+        - MiniMusterTests
+        - MiniMusterUITests

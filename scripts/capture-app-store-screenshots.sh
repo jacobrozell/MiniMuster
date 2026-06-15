@@ -37,11 +37,11 @@ capture() {
   echo
 
   SCREENSHOTS_DIR="$out_dir" xcodebuild test \
-    -project MusterRoll.xcodeproj \
-    -scheme MusterRoll \
+    -project MiniMuster.xcodeproj \
+    -scheme MiniMuster \
     -destination "$destination" \
     -parallel-testing-enabled NO \
-    -only-testing:MusterRollUITests/AppStoreScreenshotsUITests/testCaptureAppStoreScreenshots
+    -only-testing:MiniMusterUITests/AppStoreScreenshotsUITests/testCaptureAppStoreScreenshots
 
   cp "$STAGING"/*.png "$out_dir/" 2>/dev/null || true
   rm -rf "$STAGING"

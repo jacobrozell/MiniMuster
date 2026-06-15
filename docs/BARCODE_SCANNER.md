@@ -2,7 +2,7 @@
 
 **Status:** Future release — spec only (not scheduled)  
 **Target:** 1.2+ (TBD; after 1.0 ship and 1.1 polish)  
-**App:** MiniMuster (MusterRoll iOS)  
+**App:** MiniMuster (iOS)  
 **Author:** Research brainstorm, June 2026
 
 > **Not in scope for 1.0 or 1.1.** This document captures research and a proposed design for when the feature is prioritized. See [`RELEASE_1.0.0.md`](RELEASE_1.0.0.md) deferred list.
@@ -52,13 +52,13 @@ Army CSV import (`ArmyCSV`) and `ArmyStore.addUnit` are the natural insertion pa
 
 | Area | Location |
 |------|----------|
-| Unit model | `MusterRoll/Models/Unit.swift` |
-| Import drafts | `MusterRoll/DataIO/Drafts.swift` |
-| Army CSV import | `MusterRoll/DataIO/CSV/ArmyCSV.swift` |
-| Army mutations | `MusterRoll/Features/Armies/ArmyStore.swift` |
-| Faction resolution | `MusterRoll/Domain/Factions/FactionResolver.swift` |
-| Model count parsing | `MusterRoll/Domain/ModelCount.swift` |
-| Sample conventions | `MusterRoll/Resources/warhammer_armies.csv` |
+| Unit model | `MiniMuster/Models/Unit.swift` |
+| Import drafts | `MiniMuster/DataIO/Drafts.swift` |
+| Army CSV import | `MiniMuster/DataIO/CSV/ArmyCSV.swift` |
+| Army mutations | `MiniMuster/Features/Armies/ArmyStore.swift` |
+| Faction resolution | `MiniMuster/Domain/Factions/FactionResolver.swift` |
+| Model count parsing | `MiniMuster/Domain/ModelCount.swift` |
+| Sample conventions | `MiniMuster/Resources/warhammer_armies.csv` |
 
 ---
 
@@ -126,7 +126,7 @@ A single kit may be reachable via multiple keys. The catalog must index all of t
 ### File layout
 
 ```
-MusterRoll/Resources/ProductCatalog/
+MiniMuster/Resources/ProductCatalog/
   catalog.json          # Full catalog (or split by game)
   catalog-index.json    # Optional: barcode → product id only (fast load)
 ```
@@ -327,7 +327,7 @@ Faction strings pass through `FactionResolver.normalize()` before army creation 
 | Scanner permission denied → graceful fallback to manual search | UI |
 | Unknown barcode → search UI | UI |
 
-Fixture: `MusterRollTests/Fixtures/product-catalog-sample.json`
+Fixture: `MiniMusterTests/Fixtures/product-catalog-sample.json`
 
 ---
 
@@ -413,7 +413,7 @@ Update `docs/PRIVACY.md` and `docs/privacy.html` if network catalog updates or s
 2. **Terrain boxes** — Import into dedicated `Terrain` army or prompt each time?
 3. **Spearhead flag** — Auto-set for units in Spearhead boxes when game supports it?
 4. **Web app parity** — Should the same `catalog.json` ship with the MiniMuster web app?
-5. **Catalog maintenance** — Repo location: `ios/MusterRoll/Resources/` vs shared monorepo package?
+5. **Catalog maintenance** — Repo location: `ios/MiniMuster/Resources/` vs shared monorepo package?
 6. **Kill Team / Horus Heresy / Old World** — Include in v1 catalog or 40k + AoS only?
 
 ---
@@ -431,7 +431,7 @@ Update `docs/PRIVACY.md` and `docs/privacy.html` if network catalog updates or s
 
 ## References
 
-- Sample import conventions: `MusterRoll/Resources/warhammer_armies.csv`
+- Sample import conventions: `MiniMuster/Resources/warhammer_armies.csv`
 - Wahapedia data export: https://wahapedia.ru/wh40k10ed/the-rules/data-export/
 - GW retailer network (trade-only): https://trade.games-workshop.com/
 - VisionKit Data Scanner: Apple `DataScannerViewController` (iOS 16+)

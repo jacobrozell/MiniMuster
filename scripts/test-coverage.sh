@@ -20,16 +20,16 @@ usage() {
   cat <<'EOF'
 Usage: scripts/test-coverage.sh [options]
 
-Run MusterRoll unit and UI tests with code coverage enabled.
+Run MiniMuster unit and UI tests with code coverage enabled.
 
 Options:
-  --files           Include per-file coverage breakdown for MusterRoll
+  --files           Include per-file coverage breakdown for MiniMuster
   --skip-generate   Skip xcodegen (use existing .xcodeproj)
   -h, --help        Show this help
 
 Environment:
   DESTINATION       xcodebuild destination (default: iPhone 17 simulator)
-  MIN_COVERAGE      Fail if MusterRoll coverage is below this percentage (e.g. 40)
+  MIN_COVERAGE      Fail if MiniMuster coverage is below this percentage (e.g. 40)
 
 Outputs:
   .coverage/TestResults.xcresult   Raw xcresult bundle (open in Xcode)
@@ -64,8 +64,8 @@ echo "Destination: $DESTINATION"
 echo
 
 xcodebuild test \
-  -project MusterRoll.xcodeproj \
-  -scheme MusterRoll \
+  -project MiniMuster.xcodeproj \
+  -scheme MiniMuster \
   -destination "$DESTINATION" \
   -parallel-testing-enabled NO \
   -enableCodeCoverage YES \
@@ -79,8 +79,8 @@ xcrun xccov view --report --json "$RESULT_BUNDLE" > "$JSON"
 
 if [[ "$show_files" == true ]]; then
   echo
-  echo "=== Code coverage (MusterRoll, by file) ==="
-  xcrun xccov view --report --files-for-target MusterRoll "$RESULT_BUNDLE" | tee "$FILES"
+  echo "=== Code coverage (MiniMuster, by file) ==="
+  xcrun xccov view --report --files-for-target MiniMuster "$RESULT_BUNDLE" | tee "$FILES"
 fi
 
 if [[ -n "$MIN_COVERAGE" ]]; then
@@ -91,19 +91,19 @@ path, minimum = sys.argv[1], float(sys.argv[2])
 with open(path) as f:
     data = json.load(f)
 targets = {t["name"]: t["lineCoverage"] * 100 for t in data.get("targets", [])}
-pct = targets.get("MusterRoll.app") or targets.get("MusterRoll")
+pct = targets.get("MiniMuster.app") or targets.get("MiniMuster")
 if pct is None:
-    print("MusterRoll target not found in coverage report", file=sys.stderr)
+    print("MiniMuster target not found in coverage report", file=sys.stderr)
     sys.exit(2)
 print(f"{pct:.1f}")
 if pct < minimum:
     sys.exit(1)
 PY
 )"; then
-    echo "MusterRoll coverage below minimum (${MIN_COVERAGE}%)" >&2
+    echo "MiniMuster coverage below minimum (${MIN_COVERAGE}%)" >&2
     exit 1
   fi
-  echo "MusterRoll coverage: ${app_coverage}% (minimum: ${MIN_COVERAGE}%)"
+  echo "MiniMuster coverage: ${app_coverage}% (minimum: ${MIN_COVERAGE}%)"
 fi
 
 echo
