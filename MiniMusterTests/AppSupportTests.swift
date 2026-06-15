@@ -59,6 +59,27 @@ struct AppRouterTests {
         #expect(router.tab == .armies)
         #expect(router.pendingDeepLink == .collectionBacklog)
     }
+
+    @Test("openMuster switches tab and queues roster")
+    func openMuster() {
+        let router = AppRouter()
+        let id = UUID()
+        router.openMuster(rosterId: id)
+        #expect(router.tab == .muster)
+        #expect(router.pendingRosterId == id)
+        #expect(router.selectedRosterId == id)
+    }
+
+    @Test("openCollection switches tab and queues army")
+    func openCollection() {
+        let router = AppRouter()
+        let armyId = UUID()
+        let unitId = UUID()
+        router.openCollection(armyId: armyId, unitId: unitId)
+        #expect(router.tab == .armies)
+        #expect(router.pendingCollectionArmyId == armyId)
+        #expect(router.pendingCollectionUnitId == unitId)
+    }
 }
 
 @Suite("AppDeepLink")
@@ -69,6 +90,18 @@ struct AppDeepLinkTests {
         #expect(AppDeepLink.destination(from: URL(string: "minimuster://collection/backlog")!) == .collectionBacklog)
         #expect(AppDeepLink.destination(from: URL(string: "https://example.com")!) == nil)
         #expect(AppDeepLink.destination(from: URL(string: "minimuster://paints")!) == nil)
+    }
+
+    @Test("parses muster home and roster URLs")
+    func musterURLs() {
+        #expect(AppDeepLink.destination(from: URL(string: "minimuster://muster")!) == .musterHome)
+        let id = UUID()
+        let url = AppDeepLink.musterURL(rosterId: id)
+        if case .musterRoster(let parsed)? = AppDeepLink.destination(from: url) {
+            #expect(parsed == id)
+        } else {
+            Issue.record("Expected musterRoster destination")
+        }
     }
 }
 

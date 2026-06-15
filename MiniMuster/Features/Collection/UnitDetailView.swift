@@ -137,6 +137,10 @@ struct UnitDetailView: View {
                     .foregroundStyle(.secondary)
             }
 
+            UnitPhotoSection(unit: unit, pipeline: pipeline)
+
+            UnitTimelineSection(unit: unit, pipeline: pipeline)
+
             if trackable {
                 Section("Squad") {
                     Toggle("Track per model", isOn: Binding(

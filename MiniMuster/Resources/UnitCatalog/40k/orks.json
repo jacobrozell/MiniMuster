@@ -1,0 +1,392 @@
+{
+  "faction": "Orks",
+  "game": "40k",
+  "units": [
+    {
+      "id": "40k:orks:warboss",
+      "name": "Warboss",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 80,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:beast-snagga-boss",
+      "name": "Beast Snagga Boss",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 75,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:weirdboy",
+      "name": "Weirdboy",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 55,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Psyker",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:mek",
+      "name": "Mek",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 45,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:painboy",
+      "name": "Painboy",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 50,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:boyz",
+      "name": "Boyz",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Battleline",
+      "basePoints": 80,
+      "modelCount": 10,
+      "keywords": [
+        "Battleline",
+        "Infantry"
+      ],
+      "aliases": [
+        "Ork Boyz"
+      ],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:gretchin",
+      "name": "Gretchin",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Battleline",
+      "basePoints": 40,
+      "modelCount": 10,
+      "keywords": [
+        "Battleline",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:nobz",
+      "name": "Nobz",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Elite",
+      "basePoints": 105,
+      "modelCount": 5,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:stormboyz",
+      "name": "Stormboyz",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Fast Attack",
+      "basePoints": 65,
+      "modelCount": 5,
+      "keywords": [
+        "Infantry",
+        "Fly"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:lootas",
+      "name": "Lootas",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Heavy Support",
+      "basePoints": 50,
+      "modelCount": 5,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:tankbustas",
+      "name": "Tankbustas",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Heavy Support",
+      "basePoints": 70,
+      "modelCount": 5,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:kommandos",
+      "name": "Kommandos",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Elite",
+      "basePoints": 120,
+      "modelCount": 10,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:meganobz",
+      "name": "Meganobz",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Elite",
+      "basePoints": 150,
+      "modelCount": 3,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:deff-dread",
+      "name": "Deff Dread",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Vehicle",
+      "basePoints": 120,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Walker"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:killa-kan",
+      "name": "Killa Kan",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Vehicle",
+      "basePoints": 45,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Walker"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:battlewagon",
+      "name": "Battlewagon",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Transport",
+      "basePoints": 160,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Transport"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:trukk",
+      "name": "Trukk",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Transport",
+      "basePoints": 70,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Transport"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:shokkjump-dragsta",
+      "name": "Shokkjump Dragsta",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Fast Attack",
+      "basePoints": 70,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:burna-bommer",
+      "name": "Burna-bommer",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Flyer",
+      "basePoints": 115,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Fly"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:dakkajet",
+      "name": "Dakkajet",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Flyer",
+      "basePoints": 115,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Fly"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:beast-snagga-boyz",
+      "name": "Beast Snagga Boyz",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Battleline",
+      "basePoints": 95,
+      "modelCount": 10,
+      "keywords": [
+        "Battleline",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:squighog-boyz",
+      "name": "Squighog Boyz",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Fast Attack",
+      "basePoints": 150,
+      "modelCount": 4,
+      "keywords": [
+        "Cavalry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:orks:warbikers",
+      "name": "Warbikers",
+      "faction": "Orks",
+      "game": "40k",
+      "category": "Fast Attack",
+      "basePoints": 65,
+      "modelCount": 3,
+      "keywords": [
+        "Bike"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    }
+  ]
+}

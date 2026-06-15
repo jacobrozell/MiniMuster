@@ -185,6 +185,55 @@ MiniMuster is a local hobby tracker. No login is required. To explore with data,
 
 ---
 
+## Draft — 1.2 update (Muster tab)
+
+_Use when [ARMY_LIST_BUILDER.md](ARMY_LIST_BUILDER.md) ships. Do not publish before catalog + disclaimer are in-app._
+
+### Subtitle (candidate)
+
+Track, paint & muster armies
+
+### Description additions
+
+Append to **Features** list:
+
+• **Muster** tab — build 40k army lists with automatic point totals  
+• See which list units you own in your collection and what’s still missing  
+• One tap to add missing models to your painting army  
+• Battle size presets: Incursion, Strike Force, Onslaught  
+
+Add paragraph before closing line:
+
+*Muster lists use unofficial community points data for personal list building — not endorsed by Games Workshop.*
+
+### Promotional text (candidate)
+
+Muster army lists, track painting progress, and see what you can field — all on device.
+
+### Keywords (additions)
+
+muster,army list,list builder,points,40k list,roster,battlescribe
+
+### What's New (1.2 stub)
+
+• New **Muster** tab — build and save army lists with point tracking  
+• Collection bridge — fieldable % and add missing units to your army  
+• Grey Knights, Space Marines, Necrons unit catalogs (more factions coming)  
+
+### Screenshot (add when automated)
+
+| File | Screen |
+|------|--------|
+| `07-muster-roster` | Muster tab — roster editor with points bar + fieldable % |
+
+Extend `AppStoreScreenshotsUITests` and `capture-app-store-screenshots.sh` when Muster UI exists.
+
+### Review notes addition
+
+Muster uses bundled JSON for unit names and community-sourced point values. No rules text from GW. User can build lists offline. Optional iCloud sync per [CLOUD_SYNC.md](CLOUD_SYNC.md) if shipped in same release.
+
+---
+
 ## TestFlight checklist
 
 - [ ] iPhone SE / small phone — layout OK

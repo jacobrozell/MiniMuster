@@ -5,6 +5,7 @@ import SwiftData
 struct CollectionTab: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(AppRouter.self) private var router
 
     @State private var selectedArmyId: UUID?
     @State private var selectedUnitId: UUID?
@@ -33,6 +34,29 @@ struct CollectionTab: View {
         }
         .onChange(of: detailPath) { _, path in
             if path.isEmpty { selectedUnitId = nil }
+        }
+        .onAppear { consumePendingCollection() }
+        .onChange(of: router.pendingCollectionArmyId) { _, _ in consumePendingCollection() }
+    }
+
+    private func consumePendingCollection() {
+        guard let armyId = router.pendingCollectionArmyId else { return }
+        let unitId = router.pendingCollectionUnitId
+        router.pendingCollectionArmyId = nil
+        router.pendingCollectionUnitId = nil
+        selectedArmyId = armyId
+        if let unitId {
+            selectedUnitId = unitId
+            if usesSplitLayout {
+                detailPath.append(CollectionRoute.unit(unitId))
+            } else {
+                compactPath = NavigationPath()
+                compactPath.append(CollectionRoute.army(armyId))
+                compactPath.append(CollectionRoute.unit(unitId))
+            }
+        } else if !usesSplitLayout {
+            compactPath = NavigationPath()
+            compactPath.append(CollectionRoute.army(armyId))
         }
     }
 

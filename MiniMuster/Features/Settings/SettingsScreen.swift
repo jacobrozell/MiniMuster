@@ -30,6 +30,8 @@ struct SettingsScreen: View {
                     }
                 }
 
+                MusterSettingsSection(cfg: cfg)
+
                 SettingsDataSection()
 
                 Section("Help & Feedback") {

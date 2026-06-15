@@ -12,7 +12,22 @@ struct UnitRow: View {
     private var stacksStateChip: Bool { dynamicTypeSize.isAccessibilitySize }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        HStack(alignment: .top, spacing: 10) {
+            if let cover = unit.coverPhoto {
+                UnitPhotoThumb(photo: cover)
+            }
+            VStack(alignment: .leading, spacing: 4) {
+                rowContent
+            }
+        }
+        .padding(.vertical, 2)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(accessibilityText)
+        .accessibilityHint("Opens unit details")
+    }
+
+    @ViewBuilder
+    private var rowContent: some View {
             if stacksStateChip {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(unit.name)
@@ -58,11 +73,6 @@ struct UnitRow: View {
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
-        }
-        .padding(.vertical, 2)
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(accessibilityText)
-        .accessibilityHint("Opens unit details")
     }
 
     private var modelLabel: String {

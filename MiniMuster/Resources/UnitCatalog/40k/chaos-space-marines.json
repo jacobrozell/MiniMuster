@@ -1,0 +1,401 @@
+{
+  "faction": "Chaos Space Marines",
+  "game": "40k",
+  "units": [
+    {
+      "id": "40k:chaos-space-marines:abaddon-the-despoiler",
+      "name": "Abaddon the Despoiler",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 270,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Epic Hero",
+        "Infantry"
+      ],
+      "aliases": [
+        "Abaddon"
+      ],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:lord-discordant",
+      "name": "Lord Discordant",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 160,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:master-of-possession",
+      "name": "Master of Possession",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 60,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Psyker",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:sorcerer",
+      "name": "Sorcerer",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 60,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Psyker",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:dark-apostle",
+      "name": "Dark Apostle",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 65,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:chaos-lord",
+      "name": "Chaos Lord",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Character",
+      "basePoints": 70,
+      "modelCount": 1,
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:legionaries",
+      "name": "Legionaries",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Battleline",
+      "basePoints": 90,
+      "modelCount": 5,
+      "keywords": [
+        "Battleline",
+        "Infantry"
+      ],
+      "aliases": [
+        "Chaos Legionaries"
+      ],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:cultist-mob",
+      "name": "Cultist Mob",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Battleline",
+      "basePoints": 50,
+      "modelCount": 10,
+      "keywords": [
+        "Battleline",
+        "Infantry"
+      ],
+      "aliases": [
+        "Cultists"
+      ],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:possessed",
+      "name": "Possessed",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Elite",
+      "basePoints": 120,
+      "modelCount": 5,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:chosen",
+      "name": "Chosen",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Elite",
+      "basePoints": 125,
+      "modelCount": 5,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:havocs",
+      "name": "Havocs",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Heavy Support",
+      "basePoints": 125,
+      "modelCount": 5,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:raptors",
+      "name": "Raptors",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Fast Attack",
+      "basePoints": 110,
+      "modelCount": 5,
+      "keywords": [
+        "Infantry",
+        "Fly"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:warp-talons",
+      "name": "Warp Talons",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Fast Attack",
+      "basePoints": 125,
+      "modelCount": 5,
+      "keywords": [
+        "Infantry",
+        "Fly"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:obliterators",
+      "name": "Obliterators",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Heavy Support",
+      "basePoints": 165,
+      "modelCount": 2,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:helbrute",
+      "name": "Helbrute",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Vehicle",
+      "basePoints": 115,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Walker"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:defiler",
+      "name": "Defiler",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Vehicle",
+      "basePoints": 165,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Walker"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:rhino",
+      "name": "Rhino",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Transport",
+      "basePoints": 80,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Transport"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:land-raider",
+      "name": "Land Raider",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Vehicle",
+      "basePoints": 240,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Transport"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:forgefiend",
+      "name": "Forgefiend",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Heavy Support",
+      "basePoints": 150,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Daemon"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:maulerfiend",
+      "name": "Maulerfiend",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Fast Attack",
+      "basePoints": 130,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Daemon"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:venomcrawler",
+      "name": "Venomcrawler",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Heavy Support",
+      "basePoints": 110,
+      "modelCount": 1,
+      "keywords": [
+        "Vehicle",
+        "Daemon"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:accursed-cultists",
+      "name": "Accursed Cultists",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Other",
+      "basePoints": 90,
+      "modelCount": 8,
+      "keywords": [
+        "Infantry"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    },
+    {
+      "id": "40k:chaos-space-marines:chaos-terminators",
+      "name": "Chaos Terminators",
+      "faction": "Chaos Space Marines",
+      "game": "40k",
+      "category": "Elite",
+      "basePoints": 180,
+      "modelCount": 5,
+      "keywords": [
+        "Infantry",
+        "Terminator"
+      ],
+      "aliases": [],
+      "boxSources": [],
+      "edition": "10th",
+      "pointsKey": "2025-06"
+    }
+  ]
+}

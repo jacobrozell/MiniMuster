@@ -26,6 +26,12 @@ final class Unit {
     @Relationship(deleteRule: .cascade, inverse: \SquadMember.unit)
     var members: [SquadMember] = []
 
+    @Relationship(deleteRule: .cascade, inverse: \ModelPhoto.unit)
+    var photos: [ModelPhoto] = []
+
+    @Relationship(deleteRule: .cascade, inverse: \StageEvent.unit)
+    var stageEvents: [StageEvent] = []
+
     init(name: String,
          qty: Int = 1,
          source: String = "",
@@ -60,5 +66,20 @@ extension Unit {
 
     var orderedMembers: [SquadMember] {
         members.sorted { $0.index < $1.index }
+    }
+
+    var coverPhoto: ModelPhoto? {
+        photos.first(where: \.isCover) ?? orderedPhotos.first
+    }
+
+    var orderedPhotos: [ModelPhoto] {
+        photos.sorted {
+            if $0.sortIndex != $1.sortIndex { return $0.sortIndex < $1.sortIndex }
+            return $0.createdAt < $1.createdAt
+        }
+    }
+
+    var orderedStageEvents: [StageEvent] {
+        stageEvents.sorted { $0.occurredAt < $1.occurredAt }
     }
 }

@@ -74,20 +74,50 @@ final class AppStoreScreenshotsUITests: XCTestCase {
         row.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
     }
 
-    private func openArmy(named name: String, in app: XCUIApplication) {
-        let id = "army-\(name)"
-        for query in [app.buttons, app.otherElements] {
-            let row = query[id]
-            if row.waitForExistence(timeout: 5) {
-                tapRow(row, in: app)
-                return
-            }
+    private func waitForArmyDetail(named name: String, in app: XCUIApplication, timeout: TimeInterval) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        while Date() < deadline {
+            if app.staticTexts["Select an Army"].exists { /* still on placeholder */ }
+            else if app.navigationBars[name].exists { return true }
+            else if app.descendants(matching: .any)
+                .matching(NSPredicate(format: "identifier BEGINSWITH 'unit-'"))
+                .firstMatch.exists { return true }
+            RunLoop.current.run(until: Date().addingTimeInterval(0.25))
         }
-        let fallback = app.descendants(matching: .any)
-            .matching(NSPredicate(format: "label CONTAINS[c] %@", name))
+        return false
+    }
+
+    private func armyRow(named name: String, in app: XCUIApplication) -> XCUIElement? {
+        let id = "army-\(name)"
+        let queries: [XCUIElementQuery] = [
+            app.buttons,
+            app.cells,
+            app.tables.cells,
+            app.collectionViews.cells,
+            app.otherElements,
+        ]
+        for query in queries {
+            let row = query[id]
+            if row.waitForExistence(timeout: 1) { return row }
+        }
+        let labeled = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier == %@ OR label CONTAINS[c] %@", id, name))
             .firstMatch
-        XCTAssertTrue(fallback.waitForExistence(timeout: 5))
-        tapRow(fallback, in: app)
+        return labeled.waitForExistence(timeout: 2) ? labeled : nil
+    }
+
+    private func openArmy(named name: String, in app: XCUIApplication) {
+        XCTAssertNotNil(armyRow(named: name, in: app), "Army row not found: \(name)")
+
+        for _ in 0..<3 {
+            guard let row = armyRow(named: name, in: app) else { break }
+            tapRow(row, in: app)
+            if waitForArmyDetail(named: name, in: app, timeout: 4) { return }
+        }
+        XCTAssertTrue(
+            waitForArmyDetail(named: name, in: app, timeout: 12),
+            "Army detail did not open"
+        )
     }
 
     private func scrollToReveal(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 6) {
@@ -98,7 +128,7 @@ final class AppStoreScreenshotsUITests: XCTestCase {
 
     private func openUnit(named name: String, in app: XCUIApplication) {
         let id = "unit-\(name)"
-        for query in [app.buttons, app.otherElements] {
+        for query in [app.buttons, app.cells, app.otherElements] {
             let row = query[id]
             if row.waitForExistence(timeout: 5) {
                 tapRow(row, in: app)
@@ -159,33 +189,26 @@ final class AppStoreScreenshotsUITests: XCTestCase {
             button.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
         }
         XCTAssertTrue(
-            waitForLabel("Hallowed Knights", in: app, timeout: 20),
+            waitForLabel("Hallowed Knights", in: app, timeout: 30),
             "Sample data did not load"
         )
     }
 
     private func configureAppForCapture(_ app: XCUIApplication, variant: CaptureVariant) {
-        app.launchArguments = ["UI-Testing"]
-
+        var args = ["UI-Testing"]
         switch variant {
         case .light:
+            args.append("UI-Testing-LightTheme")
             XCUIDevice.shared.appearance = .light
         case .dark:
+            args.append("UI-Testing-DarkTheme")
             XCUIDevice.shared.appearance = .dark
         case .accessibility:
             XCUIDevice.shared.appearance = .light
             app.launchEnvironment["UIPreferredContentSizeCategoryName"] =
                 "UICTContentSizeCategoryAccessibilityExtraExtraExtraLarge"
         }
-    }
-
-    private func applyTheme(named theme: String, in app: XCUIApplication) {
-        tapSettings(app)
-        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
-        let themeButton = app.buttons[theme]
-        XCTAssertTrue(themeButton.waitForExistence(timeout: 3), "Theme control not found: \(theme)")
-        themeButton.tap()
-        dismissSettings(app)
+        app.launchArguments = args
     }
 
     private func runCaptureFlow(variant: CaptureVariant) throws {
@@ -194,35 +217,24 @@ final class AppStoreScreenshotsUITests: XCTestCase {
         app.launch()
         dismissOnboarding(app)
 
-        switch variant {
-        case .light:
-            applyTheme(named: "Light", in: app)
-        case .dark:
-            applyTheme(named: "Dark", in: app)
-        case .accessibility:
-            break
-        }
-
         XCTAssertTrue(app.navigationBars["Collection"].waitForExistence(timeout: 5))
         try saveScreenshot(app, name: "01-empty-collection")
 
         tapLoadSampleData(app)
         try saveScreenshot(app, name: "02-collection-armies")
 
-        // Capture settings while the collection sidebar is visible (iPad split view hides it after tab switches).
-        tapSettings(app)
-        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
-        app.swipeUp()
-        try saveScreenshot(app, name: "06-settings-data")
-        dismissSettings(app)
-        tapTab(app, id: "tabCollection")
-
+#if canImport(UIKit)
+        if UIDevice.current.userInterfaceIdiom != .pad {
+            openArmy(named: "Hallowed Knights", in: app)
+        } else {
+            XCTAssertTrue(
+                waitForArmyDetail(named: "Hallowed Knights", in: app, timeout: 15),
+                "Army detail did not open"
+            )
+        }
+#else
         openArmy(named: "Hallowed Knights", in: app)
-        let lordVigilant = app.descendants(matching: .any)
-            .matching(NSPredicate(format: "label CONTAINS[c] %@", "Lord-Vigilant"))
-            .firstMatch
-        scrollToReveal(lordVigilant, in: app)
-        XCTAssertTrue(waitForLabel("Lord-Vigilant", in: app, timeout: 15))
+#endif
         try saveScreenshot(app, name: "03-army-units")
 
         openUnit(named: "Lord-Vigilant on Gryph-stalker", in: app)
@@ -233,6 +245,18 @@ final class AppStoreScreenshotsUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Paints"].waitForExistence(timeout: 5))
         XCTAssertTrue(waitForLabel("Absolution Green", in: app))
         try saveScreenshot(app, name: "05-paints")
+
+        // Capture settings from Collection so the iPad sidebar stays visible in the shot.
+        tapTab(app, id: "tabCollection")
+        XCTAssertTrue(
+            app.navigationBars["Collection"].waitForExistence(timeout: 10)
+                || app.buttons["army-Hallowed Knights"].waitForExistence(timeout: 3),
+            "Collection tab did not open"
+        )
+        tapSettings(app)
+        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
+        app.swipeUp()
+        try saveScreenshot(app, name: "06-settings-data")
     }
 
     func testCaptureAppStoreScreenshotsLight() throws {

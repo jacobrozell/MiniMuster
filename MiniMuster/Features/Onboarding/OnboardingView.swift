@@ -57,6 +57,13 @@ struct OnboardingView: View {
             subtitle: "Pick how you’d like to begin",
             body: "Explore with sample armies and paints, import your own files from Settings, or jump straight into an empty collection."
         ),
+        Page(
+            id: 4,
+            symbol: "flag.fill",
+            title: "Muster for the table",
+            subtitle: "Lists that know your shelf",
+            body: "Build point lists in the Muster tab. See which units you already own in Collection and send missing models straight to your painting army."
+        ),
     ]
 
     private var largeText: Bool { dynamicTypeSize.isAccessibilitySize }

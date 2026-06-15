@@ -32,6 +32,9 @@ struct ArmyDetailView: View {
     @State private var showMoveUnit = false
     @State private var deleteWarningTrigger = false
     @State private var duplicateTrigger = false
+    @State private var showMusterRoster = false
+
+    @Query(sort: \Roster.sortIndex) private var rosters: [Roster]
 
     private var cfg: AppConfiguration { configs.first ?? Config.current(context) }
     private var overrides: [FactionPresetOverride] { cfg.factionOverrides }
@@ -110,6 +113,12 @@ struct ArmyDetailView: View {
                 .presentationDetents([.medium])
             }
         }
+        .sheet(isPresented: $showMusterRoster) {
+            if let army {
+                NewRosterSheet(prefillGame: army.game, prefillFaction: army.faction,
+                               prefillLinkedArmyId: army.id)
+            }
+        }
         .confirmationDialog("Delete entire army \"\(army?.name ?? "")\" and all its units?",
                             isPresented: $confirmDeleteArmy, titleVisibility: .visible) {
             Button("Delete", role: .destructive) {
@@ -165,7 +174,7 @@ struct ArmyDetailView: View {
     private func browseModeList(army: Army, pres: (crest: String, colorHex: String)) -> some View {
         List {
             armyHeaderSection(army: army, pres: pres)
-            unitsSection(army: army)
+            unitsSection(army: army, padSidebar: usesPadSidebarList)
         }
         .listStyle(.insetGrouped)
     }
@@ -211,7 +220,7 @@ struct ArmyDetailView: View {
     }
 
     @ViewBuilder
-    private func unitsSection(army: Army) -> some View {
+    private func unitsSection(army: Army, padSidebar: Bool) -> some View {
         let showAdvanceTip = !isEditing && visibleUnits.contains { canAdvance($0) }
         Section {
             if visibleUnits.isEmpty {
@@ -223,22 +232,22 @@ struct ArmyDetailView: View {
                 .listRowBackground(Color.clear)
             } else {
                 ForEach(visibleUnits) { unit in
+                    let row = unitRow(unit)
                     Group {
-                        if usesPadSidebarList {
+                        if padSidebar {
                             Button {
                                 selectedUnitId = unit.id
                                 onSelectUnit(unit.id)
-                            } label: { unitRow(unit) }
+                            } label: { row }
                             .buttonStyle(.plain)
+                            .accessibilityIdentifier("unit-\(unit.name)")
                         } else {
-                            NavigationLink(value: CollectionRoute.unit(unit.id)) {
-                                unitRow(unit)
-                            }
-                            .navigationLinkIndicatorVisibility(.hidden)
+                            NavigationLink(value: CollectionRoute.unit(unit.id)) { row }
+                                .navigationLinkIndicatorVisibility(.hidden)
+                                .accessibilityIdentifier("unit-\(unit.name)")
                         }
                     }
-                    .accessibilityIdentifier("unit-\(unit.name)")
-                    .listSidebarSelection(isSelected: unit.id == selectedUnitId, enabled: usesPadSidebarList)
+                    .listSidebarSelection(isSelected: unit.id == selectedUnitId, enabled: padSidebar)
                 }
             }
         } header: {
@@ -344,6 +353,13 @@ struct ArmyDetailView: View {
                     }
                 }
                 Divider()
+                Button("Muster roster…", systemImage: "flag") {
+                    if let army, let linked = linkedRoster(for: army) {
+                        router.openMuster(rosterId: linked.id)
+                    } else {
+                        showMusterRoster = true
+                    }
+                }
                 Button("Pipeline stages", systemImage: "list.bullet") { showPipeline = true }
                 Button("Reset crest & colour", systemImage: "circle.lefthalf.filled") {
                     if let army { ArmyStore.resetTheme(army, in: context) }
@@ -377,5 +393,9 @@ struct ArmyDetailView: View {
         duplicateTrigger.toggle()
         selectedUnitId = copy.id
         onSelectUnit(copy.id)
+    }
+
+    private func linkedRoster(for army: Army) -> Roster? {
+        rosters.first { $0.linkedArmyId == army.id }
     }
 }
